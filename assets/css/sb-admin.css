@@ -324,3 +324,15 @@ table.dataTable thead .sorting:after {
 .center-inline {
     text-align: center;
 }
+
+.border-right-thin {
+    border-right : 1px solid #ddd;
+}
+
+.border-left-thin {
+    border-left : 1px solid #ddd;
+}
+
+#permissions_table tr:last-child {
+    border-bottom: 1px solid #ddd;
+}

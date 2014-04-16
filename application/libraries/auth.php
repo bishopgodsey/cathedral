@@ -538,6 +538,7 @@ class Auth
 
 	}//end permission_exists()
 
+
 	//--------------------------------------------------------------------
 
 	/**
@@ -551,12 +552,12 @@ class Auth
 	 */
 	private function load_permissions()
 	{
-		/*
+		
 		if ( ! isset($this->permissions))
 		{
-			$this->ci->load->model('permissions/permission_model');
+			$this->ci->load->model('permission_model');
 
-			$perms = $this->ci->permission_model->find_all();
+			$perms = $this->ci->permission_model->get_all();
 
 			$this->permissions = array();
 
@@ -565,7 +566,7 @@ class Auth
 				$this->permissions[strtolower($perm->name)] = $perm->permission_id;
 			}
 		}
-		*/
+		
 
 	}//end load_permissions()
 
@@ -580,11 +581,11 @@ class Auth
 	 */
 	private function load_role_permissions($role_id=NULL)
 	{
-		/*$role_id = ! is_null($role_id) ? $role_id : $this->role_id();
+		$role_id = ! is_null($role_id) ? $role_id : $this->role_id();
 
 		if ( ! isset($this->role_permissions[$role_id]))
 		{
-			$this->ci->load->model('roles/role_permission_model');
+			$this->ci->load->model('role_permission_model');
 
 			$role_perms = $this->ci->role_permission_model->find_for_role($role_id);
 
@@ -598,7 +599,7 @@ class Auth
 				}
 			}
 		}
-		*/
+		
 
 	}//end load_role_permissions()
 
@@ -1078,10 +1079,10 @@ if ( ! function_exists('has_permission'))
 	 */
 	function has_permission($permission, $override = FALSE)
 	{
-		/*$ci =& get_instance();
+		$ci =& get_instance();
 
 		return $ci->auth->has_permission($permission, NULL, $override);
-		*/
+		
 	}//end has_permission()
 }
 
@@ -1100,9 +1101,9 @@ if ( ! function_exists('permission_exists'))
 	 */
 	function permission_exists($permission)
 	{
-		/*$ci =& get_instance();
+		$ci =& get_instance();
 
-		return $ci->auth->permission_exists($permission);*/
+		return $ci->auth->permission_exists($permission);
 
 	}//end permission_exists()
 }

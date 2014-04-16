@@ -54,7 +54,7 @@
             <div class="center-inline">
                 <button  class="btn btn-primary" type="submit">
                     <i class="fa fa-save"></i>
-                    <?php echo isset($permission)?'Update':'Save' ?>
+                    <?php echo isset($role)?'Update':'Save' ?>
                 </button>
                 <button  class="btn btn-default previous" type="button"><i class="fa fa-times-circle-o"></i> Cancel</button>
             </div>

@@ -28,7 +28,7 @@
                     </div>
                     <div class="panel-body">
                         <form role="form" action="<?php echo site_url('login/login');?>" method="post">
-							<?php if(!empty($this->session->flashdata('login_message'))) :?>
+							<?php if($this->session->flashdata('login_message')) :?>
                             <div class="alert alert-danger alert-dismissable">
 								<button type="button" class="close" data-dimiss="alert" aria-hidden="true">x</button>
 								<?php echo $this->session->flashdata('login_message'); ?>

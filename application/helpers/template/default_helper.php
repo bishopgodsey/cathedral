@@ -154,13 +154,13 @@ if(!defined('BASEPATH'))
 						<a href="'.site_url('settings/users/').'">Users</a>
 					</li>
 					<li>
-						<a href="'.site_url('eglise/permissions').'">Permissions</a>
+						<a href="'.site_url('settings/permissions').'">Permissions</a>
 					</li>
 					<li>
 						<a href="#">Manage Permissions</a>
 					</li>
 					<li>
-						<a href="'.site_url('eglise/roles/').'">Roles</a>
+						<a href="'.site_url('settings/roles/').'">Roles</a>
 					</li>
 					<li>
 						<a href="login.html">Application Settings</a>

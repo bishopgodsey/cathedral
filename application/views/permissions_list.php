@@ -18,7 +18,7 @@
         
     </div>
     <div class="panel-body">
-        <?php if(!empty($this->session->flashdata('action_message'))) : $message = $this->session->flashdata('action_message'); ?>
+        <?php if($this->session->flashdata('action_message')) : $message = $this->session->flashdata('action_message'); ?>
         <div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
             <button type="button" class="close" data-dimiss="alert">&times;</button>
                 <?php echo $message['text']; ?>

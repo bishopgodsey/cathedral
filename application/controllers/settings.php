@@ -394,12 +394,51 @@ class Settings extends CI_Controller {
         $this->layout->view('roles_list',$data);
     }
 
-    public function editRole($role_id) {
+    public function editRole($role_id, $is_ajax = 0) {
     
+        $this->load->model('role_model');
+
+        $data['ajax'] = $is_ajax;
+
+        $role = $this->role_model->find($role_id);  
+
+        $data['role'] = $role;
+
+  
+        if($is_ajax) {
+            $this->load->view('role_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('sb-admin');
+            $this->layout->view('role_form',$data); 
+        }
     }
 
-    public function deleteRole($role_id) {
+    public function deleteRole($role_id, $is_ajax = 0) {
+ 
+        $this->load->model('role_model');
+
+        $message = array();
+
+        if($this->role_model->delete($role_id)) {
+            $message['type'] = 'success';
+            $message['text'] = 'Permission deleted Successfully';    
+        }else {
     
+            $message['type'] = $is_ajax?'error':'danger';
+            $message['text'] = 'An error occured while deleting permission. Please try again';
+        } 
+
+        if($is_ajax) {
+            return json_encode($message);
+        }else {
+            $this->session->set_flashdata('action_message',$message);
+            
+            redirect('settings/permissions');
+        }
     }
 
     public function createRole($is_ajax=0) {
@@ -416,5 +455,110 @@ class Settings extends CI_Controller {
             $this->layout->view('role_form',$data);
         }
     }
+
+    public function saveRole() {
         
+        $is_ajax = $this->input->post('ajax');
+        $role_id = $this->input->post('id_role');
+
+        $this->load->library('form_validation');
+
+        $config = array(
+            array('field'=>'role_name',
+                  'label'=>'Role Name',
+                  'rules'=>'required'),
+            array('field'=>'description',
+                  'label'=>'Role Description',
+                  'rules'=>'required')
+        );
+
+        $this->form_validation->set_rules($config);
+
+        if($this->form_validation->run()===FALSE) {
+            $this->createRole($is_ajax);
+        }else {
+        
+            $this->load->model('role_model');
+            
+            $data = $this->input->post();
+            $data['can_delete'] = isset($data['can_delete']); 
+            $message = array();
+            if(empty($role_id)) {
+                if($this->role_model->save_role($data)) {
+                    $message['type'] = 'success';
+                    $message['text'] = 'Role created Successfully';
+                }else {
+                    $message['type'] = $is_ajax?'error':'danger';
+                    $message['text'] = 'An error occured while creating role. Please try again';
+                }
+            
+            }else {
+                
+                if($this->role_model->update_role($data)) {
+                    
+                    $message['type'] = 'success';
+                    $message['text'] = 'Role updated successfully';
+                }else {
+                    
+                    $message['type'] = $is_ajax?'error':'danger';
+                    $message['text'] = 'An error occured while updating role. Please try again';
+                }
+            }
+
+            if($is_ajax) {
+                echo json_encode($message);
+            }else {
+                $this->session->set_flashdata('action_message',$message);
+
+                redirect('settings/roles');
+            } 
+        }
+    }
+        
+    public function rolePermissions() {
+        
+       
+        // SB Admin CSS - Include with every page
+        $this->layout->add_css('sb-admin');
+
+        // SB Admin Scripts - Include with every page
+        $this->layout->add_js('sb-admin');
+        $this->layout->add_js('roles_permissions');
+        
+        $this->load->model(array('role_permission_model','role_model','permission_model'));
+        
+        // get all roles not deleted 
+        $roles = $this->role_model->get_all(array('deleted'=>0)); 
+
+        //get all permissions not deleted
+        $permissions = $this->permission_model->get_all();
+
+
+        $roles_permissions = $this->role_permission_model->find_all_roles_permissions();  
+
+
+        foreach($roles_permissions as $rp) {
+
+            $current_permissions[] = $rp->role_id.','.$rp->permission_id;
+
+        }
+
+        $data['roles'] = $roles;
+        $data['role_permissions'] = $roles_permissions;
+        $data['permissions'] = $permissions;
+        $data['permissions_values'] = $current_permissions;
+
+        //$this->layout->view('rolePermissions');
+        $this->layout->view('rolePermissions',$data); 
+        
+    }
+
+    function saveRolePermissions() {
+        $data = $this->input->post();
+
+        echo '<pre>';
+            print_r($data);
+        echo '</pre>';
+    }
+
 }
