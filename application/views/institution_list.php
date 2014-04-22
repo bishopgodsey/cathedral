@@ -1,26 +1,23 @@
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">Users</h1>
+    <h1 class="page-header">Institution : <?php echo $institution_type->nom_type; ?></h1>
 	</div>
 	<!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
 <div class="row">
-
 <div class="panel panel-default">
-	
 	<div class="panel-heading">
-		
-		<i class="fa fa-bar-chart-o fa-fw"></i> User List
+		<i class="fa fa-bar-chart-o fa-fw"></i> List of <?php echo $institution_type->nom_type; ?>
         <div class="pull-right">
-            <?php if(has_permission('Users.Add')) : ?>
-			<a title="Add new user" id="createUser" class="btn btn-primary panel-header-btn" href="<?php echo site_url('settings/createUser');?>"><i title="Add new user" class="fa fa-plus-circle"></i> New User</a>
+            <?php if(has_permission('Institutions.Add')) : ?>
+            <a title="Add new <?php echo $institution_type->nom_type; ?>" id="createInstitution" class="btn btn-primary panel-header-btn" href="<?php echo site_url('institution/create/'.$institution_type->id_type);?>"><i title="Add new <?php echo $institution_type->nom_type; ?>" class="fa fa-plus-circle"></i> New <?php echo $institution_type->nom_type; ?></a>
             <?php endif; ?>
         </div>
-		
-	</div>
+    </div>
 	<div class="panel-body">
-		<?php if($this->session->flashdata('action_message')) : $message = $this->session->flashdata('action_message'); ?>
+        <?php if($this->session->flashdata('action_message')) : 
+            $message = $this->session->flashdata('action_message'); ?>
 		<div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
 			<button type="button" class="close" data-dimiss="alert">&times;</button>
 				<?php echo $message['text']; ?>
@@ -39,30 +36,29 @@
 				<thead>
 					<tr>
 					<th><?php echo form_checkbox('select_all','select_all[]',FALSE,'id="select_all"'); ?></th>
-					<?php foreach($user_columns as $column) : ?>
+					<?php foreach($institution_columns as $column) : ?>
 						<th><?php echo $column; ?></th>
 					<?php endforeach; ?>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach($users as $user) : ?>
+					<?php foreach($institutions as $institution) : ?>
 						<tr>
 							<td><?php echo form_checkbox('select_all','select_all[]'); ?></td>
-							<td><?php echo $user->username; ?></td>
-							<td><?php echo $user->nom; ?></td>
-							<td><?php echo $user->prenom; ?></td>
-							<td><?php echo $user->display_name; ?></td>
-							<td><?php echo $user->email; ?></td>
-							<td><?php echo $user->last_login; ?></td>
-                            <td><?php echo $user->active; ?></td>
+                            <td><?php echo $institution->nom_institution; ?></td>
+                            <?php if($institution->parent_id && count($parent_institutions)>0 ) :  ?>
+                            <td><?php echo $parent_institutions[$institution->parent_id]; ?></td>
+                            <?php endif; ?>
+                            <td><?php echo $institution->nom_responsable; ?></td>
+							<td><?php echo $institution->prenom_responsable; ?></td>
                             <?php 
-                            if(has_permission('Users.Edit') || has_permission('Users.Delete')) : ?>
+                            if(has_permission('Institutions.Edit') || has_permission('Institutions.Delete')) : ?>
                             <td>
-                                <?php if(has_permission('Users.Edit')) :  ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editUser/'.$user->id);?>"><i class="fa fa-edit"></i> Edit</a>
+                                <?php if(has_permission('Institutions.Edit')) :  ?>
+                                <a class="btn btn-info edit" href="<?php echo site_url('institution/edit/'.$institution_type->id_type.'/'.$institution->id_institution);?>"><i class="fa fa-edit"></i> Edit</a>
                                 <?php endif; ?>
-                                <?php if(has_permission('Users.Delete')) :  ?>
-                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deleteUser/'.$user->id);?>"><i class="fa fa-trash-o"></i> Delete</a>
+                                <?php if(has_permission('Institutions.Delete')) :  ?>
+                                <a class="btn btn-danger delete" href="<?php echo site_url('institution/delete/'.$institution_type->id_type.'/'.$institution->id_institution);?>"><i class="fa fa-trash-o"></i> Delete</a>
                                 <?php endif; ?>
                             </td>
                             <?php endif; ?>
@@ -89,24 +85,5 @@
 
 			</div>
 		</div>
-	</div>
-	<div id="createUserModal"class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">	
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Create New User</h4>
-			</div>
-			<div class="modal-body">
-				
-			</div>
-			<div class="modal-footer">
-				
-				<button type="button" class="btn btn-primary" id="saveUser"><i class="fa fa-save"></i> Save</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
-    </div>
-
+</div>
 </div>

@@ -13,7 +13,9 @@
        
        <i class="fa fa-group fa-fw"></i> User Roles
        <div class="pull-right">
+        <?php if(has_permission('Roles.Add')) : ?>
            <a title="Add new role" id="createRole" class="btn btn-primary panel-header-btn" href="<?php echo site_url('settings/createRole');?>"><i title="Add new Role" class="fa fa-plus-circle"></i> New Role</a>
+        <?php endif; ?>
        </div>
        
    </div>
@@ -25,11 +27,18 @@
        </div>
        <?php endif; ?>
 
+        <?php if($this->session->flashdata('notification_message')) : 
+                $message = $this->session->flashdata('notification_message');?>
+            <div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
+                <button type="button" class="close" data-dimiss="alert" aria-hidden="true">&times;</button>
+                <?php echo $message['text']; ?>
+            </div>
+        <?php endif; ?>
        <div class="table-responsive">
-           <table class="table table-bordered table-striped table-hover">
+           <table class="table table-striped table-hover">
                <thead>
                    <tr>
-                   <td><?php echo form_checkbox('select_all','select_all[]',FALSE,'id="select_all"'); ?></td>
+                   <th><?php echo form_checkbox('select_all','select_all[]',FALSE,'id="select_all"'); ?></th>
                    <?php foreach($roles_columns as $column) : ?>
                        <th><?php echo $column; ?></th>
                    <?php endforeach; ?>
@@ -43,14 +52,21 @@
                            <td><?php echo $role->description; ?></td>
                            <td><?php echo $role->build_in; ?></td>
                            <td><?php echo $role->can_delete; ?></td>
+                           <?php if(has_permission('Roles.Edit') || has_permission('Roles.Delete')) : ?>
                            <td>
+                            <?php if(has_permission('Roles.Edit')) : ?>
                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editRole/'.$role->id_role);?>">
                                    <i class="fa fa-edit"></i> Edit
                                </a>
+                            <?php endif; ?>
+                            
+                            <?php if(has_permission('Roles.Edit')) : ?>
                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deleteRole/'.$role->id_role);?>">
                                    <i class="fa fa-trash-o"></i> Delete
                                </a>
+                            <?php endif; ?>
                            </td>
+                           <?php endif; ?>
                        </tr>
                    <?php endforeach; ?>
                </tbody>

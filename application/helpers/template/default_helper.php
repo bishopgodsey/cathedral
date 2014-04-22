@@ -53,16 +53,16 @@ if(!defined('BASEPATH'))
 				<a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Eglises<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li>
-						<a href="'.site_url('eglise/eglise/1').'">Diocese</a>
+						<a href="'.site_url('institution/type/1').'">Diocese</a>
 					</li>
 					<li>
-						<a href="'.site_url('eglise/eglise/2').'">Paroisse</a>
+						<a href="'.site_url('institution/type/2').'">Paroisse</a>
 					</li>
 					<li>
-						<a href="'.site_url('eglise/eglise/3').'">Chapelle</a>
+						<a href="'.site_url('institution/type/3').'">Chapelle</a>
 					</li>
 					<li>
-						<a href="'.site_url('eglise/eglise/1').'">Sucursale</a>
+                    <a href="'.site_url('institution/type/4').'">Sucursale</a>
 					</li>
 				</ul>
 				<!-- /.nav-second-level -->
@@ -157,7 +157,7 @@ if(!defined('BASEPATH'))
 						<a href="'.site_url('settings/permissions').'">Permissions</a>
 					</li>
 					<li>
-						<a href="#">Manage Permissions</a>
+						<a href="'.site_url('settings/rolePermissions').'">Manage Permissions</a>
 					</li>
 					<li>
 						<a href="'.site_url('settings/roles/').'">Roles</a>

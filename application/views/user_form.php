@@ -21,7 +21,15 @@
 	<div class="panel-body">		
 <?php endif; ?>
 		
-		<?php echo form_open('settings/saveUser','id="user_form" class="form-horizontal"'); ?>
+<?php if($this->session->flashdata('notification_message')) : 
+        $message = $this->session->flashdata('notification_message');?>
+    <div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
+        <button type="button" class="close" data-dimiss="alert" aria-hidden="true">&times;</button>
+        <?php echo $message['text']; ?>
+    </div>
+<?php endif; ?>
+
+<?php echo form_open('settings/saveUser','id="user_form" class="form-horizontal"'); ?>
 		<div >
 			<h4 class="page-header">Credentials</h4>
 		</div>

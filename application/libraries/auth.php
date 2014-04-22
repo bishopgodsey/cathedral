@@ -134,7 +134,7 @@ class Auth
 	{
 		if (empty($login) || empty($password))
 		{
-			$this->ci->session->set_flashdata('login_message','Username and password are both required');
+			$this->ci->session->set_flashdata('notification_message','Username and password are both required');
 			return FALSE;
 		}
 
@@ -148,8 +148,8 @@ class Auth
 		// check to see if a value of FALSE came back, meaning that the username or email or password doesn't exist.
 		if ($user == null || empty($user))
 		{
-			$this->ci->session->set_flashdata('login_message','Invalid Username / Password');
-			//increase login attempts
+            $this->restrict('Invalid Username / Password');
+            //increase login attempts
 			//$this->increase_login_attempts($login);
 			return FALSE;
 		}
@@ -159,23 +159,23 @@ class Auth
 		
 		if ($user->active == 0) // in case we go to a unix timestamp later, this will still work.
 		{
-			$this->ci->session->set_flashdata('login_message','Your account is not activated');
 
+            $this->restrict('Your account is not activated');
 			return FALSE;
 		}
 
 		// check if the account has been soft deleted.
 		if ($user->deleted >= 1) // in case we go to a unix timestamp later, this will still work.
 		{
-			$this->ci->session->set_flashdata('login_message','Your account has been deleted');
-			return FALSE;
+            $this->restrict('Your account has been deleted');
+            return FALSE;
 		}
 
 		
 		if ($user->banned)
 		{
-			$this->ci->session->set_flashdata('login_message','Your account has been banned. Please contact the administrator');
-			return FALSE;
+            $this->restrict('Your accound has been banned. Please contact the administrator');
+            return FALSE;
 		}
 		
 		$this->user = $user;
@@ -259,7 +259,9 @@ class Auth
 		*/
         $this->user = FALSE;
          
-        $this->ci->session->sess_destroy();
+        //$this->ci->session->sess_destroy();
+        $this->ci->session->unset_userdata('connected_user');
+
 
         $this->restrict('You are logged out.');
 	}//end logout()
@@ -361,20 +363,29 @@ class Auth
 	public function restrict($message=NULL,$permission=NULL, $uri=NULL)
 	{
 		
-		// If user isn't logged in, don't need to check permissions
+        // if we have a message string, let's transform it in an array 
+        if($message && ! is_array($message)) {
+        
+            $text = $message;
+            $message = array();
+            $message['type'] = 'danger';
+            $message['text'] = $text;
+        }
+
+        // If user isn't logged in, don't need to check permissions
 		if ($this->is_logged_in() === FALSE)
 		{
 			if(!empty($message)) 
-				$this->ci->session->set_flashdata('login_message',$message);
-			
+				$this->ci->session->set_flashdata('notification_message',$message);
+
 			redirect('login');
 		}
-		/*
+		
 		// Check to see if the user has the proper permissions
-		if ( ! empty($permission) && ! $this->has_permission($permission))
+        if ( ! empty($permission) && ! $this->has_permission($permission))
 		{
 			// set message telling them no permission THEN redirect
-			Template::set_message( lang('us_no_permission'), 'attention');
+			//Template::set_message( lang('us_no_permission'), 'attention');
 
 			if ( ! $uri)
 			{
@@ -387,12 +398,17 @@ class Auth
 				{
 					$uri = site_url();
 				}
-			}
-			Template::redirect($uri);
+            }
+
+            
+           
+            $this->ci->session->set_flashdata('notification_message',$message);
+            
+            redirect($uri);
 		}
 
 		return TRUE;
-		*/
+		
 
 	}//end restrict()
 
@@ -413,13 +429,12 @@ class Auth
 	 */
 	public function user_id()
 	{
-		/*if ( ! $this->is_logged_in())
+		if ( ! $this->is_logged_in())
 		{
-			return FALSE;
+			return null;
 		}
 
 		return $this->user()->id;
-		*/
 
 	}//end user_id()
 
@@ -454,14 +469,14 @@ class Auth
 	 */
 	public function role_id()
 	{
-		/*
+		
 		if ( ! $this->is_logged_in())
 		{
 			return FALSE;
 		}
 
 		return $this->user()->role_id;
-		*/
+		
 
 	}//end role_id()
 
@@ -480,7 +495,7 @@ class Auth
 	 */
 	public function has_permission($permission, $role_id=NULL, $override = FALSE)
 	{
-		/*
+		
 		// move permission to lowercase for easier checking.
 		$permission = strtolower($permission);
 
@@ -511,7 +526,7 @@ class Auth
 
 		return FALSE;
 
-		*/
+		
 	}//end has_permission()
 
 	//--------------------------------------------------------------------

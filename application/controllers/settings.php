@@ -14,7 +14,11 @@ class Settings extends CI_Controller {
 	}
 	
 	public function users() {
-		
+
+        // Restrict access to users with Users.View (View Permission ) permission
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have right to view users'), 'Users.View');
+
 		// SB Admin CSS - Include with every page
 		$this->layout->add_css('sb-admin');
 		
@@ -26,8 +30,12 @@ class Settings extends CI_Controller {
 		
 		$users = $this->user_model->get_all();
 		
-		$user_columns = array('Username','Nom','Prenom','Display Name','Email','Last Login', 'Status','Actions');
-		
+		$user_columns = array('Username','Nom','Prenom','Display Name','Email','Last Login', 'Status');
+
+        if(has_permission('Users.Edit') || has_permission('Users.Delete')) {
+            $user_columns[] = 'Actions';  
+        }
+
 		$data['users'] = $users;
 		$data['user_columns'] = $user_columns;
 				
@@ -38,7 +46,10 @@ class Settings extends CI_Controller {
 	
 	function createUser($is_ajax = 0) {
 		
-		$data['ajax'] = $is_ajax;
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have the permission to access this page'), 'Users.Add');
+        
+        $data['ajax'] = $is_ajax;
 		
 		if($is_ajax) {
 			$this->load->view('user_form',$data);
@@ -193,7 +204,12 @@ class Settings extends CI_Controller {
 	**/
 	function deleteUser($user_id, $is_ajax=0) {
 		
-		$this->load->model('user_model');
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to delete a user';
+
+        $this->auth->restrict($message, 'Users.Delete');
+
+        $this->load->model('user_model');
 		
 		if($this->user_model->delete((int)$user_id)) {
 			$message['type'] = 'success';
@@ -212,7 +228,13 @@ class Settings extends CI_Controller {
 	}
 	
 	function editUser($user_id,$is_ajax=0) {
-	
+
+        // Restrict access to only users with User.Edit permission (Edit users)    
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to edit a user';
+
+        $this->auth->restrict($message, 'Users.Edit');
+
 		$this->load->model('user_model');
 		
 		$selected_user = $this->user_model->get_user_by_id($user_id);
@@ -232,6 +254,12 @@ class Settings extends CI_Controller {
 		}
 	}
     public function permissions() {
+
+        // restrict access to users who have Permissions.Views 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to view permissions';
+
+        $this->auth->restrict($message, 'Permissions.View');
         // SB Admin CSS - Include with every page
         $this->layout->add_css('sb-admin');
 
@@ -243,8 +271,12 @@ class Settings extends CI_Controller {
         
         $permissions = $this->permission_model->get_all();
         
-        $permissions_columns = array('Permission name','Permission Description','Status','Actions');
+        $permissions_columns = array('Permission name','Permission Description','Status');
 
+        if(has_permission('Permissions.Edit') || has_permission('Permissions.Delete')) {
+            $permissions_columns[] = 'Actions';
+        }
+       
         $data['permissions'] = $permissions;
         $data['permissions_columns'] = $permissions_columns;
         
@@ -253,6 +285,11 @@ class Settings extends CI_Controller {
 
     public function createPermission($is_ajax = 0) {
         
+        // restrict access to users who have Permissions.Add 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to create permissions';
+
+        $this->auth->restrict($message, 'Permissions.Add');
         $data['ajax'] = $is_ajax;
 
         if($is_ajax) {
@@ -267,7 +304,14 @@ class Settings extends CI_Controller {
         }
     }
 
-    public function deletePermission($permission_id, $is_ajax=0) {
+    public function deletePermission($permission_id, $is_ajax=0) { 
+        
+        // restrict access to users who have Permissions.Delete 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to delete permissions';
+
+        $this->auth->restrict($message, 'Permissions.Delete');
+        
         $this->load->model('permission_model');
         
         $message = array();
@@ -292,6 +336,12 @@ class Settings extends CI_Controller {
 
     public function editPermission($permission_id, $is_ajax=0) {
        
+        // restrict access to users who have Permissions.Edit 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to edit permissions';
+
+        $this->auth->restrict($message, 'Permissions.Edit');
+        
         $this->load->model('permission_model');
         
         $data['ajax'] = $is_ajax;
@@ -316,6 +366,8 @@ class Settings extends CI_Controller {
     public function savePermission($is_ajax=0) {
         $permission_id = $this->input->post('permission_id');
     
+        $is_ajax = $this->input->post('ajax');
+       
         $this->load->library('form_validation');
         
         $config = array(
@@ -374,7 +426,14 @@ class Settings extends CI_Controller {
     }
 
     public function roles() {
-    
+         
+        // restrict access to users who have Roles.View 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to view system roles';
+
+        $this->auth->restrict($message, 'Roles.View');
+
+
         // SB Admin CSS - Include with every page
         $this->layout->add_css('sb-admin');
 
@@ -386,7 +445,11 @@ class Settings extends CI_Controller {
 
         $roles = $this->role_model->get_all();
         
-        $roles_columns = array('Role Name','Role Description','Built In','Can Be Deleted','Actions');
+        $roles_columns = array('Role Name','Role Description','Built In','Can Be Deleted');
+
+        if(has_permission('Roles.Edit') || has_permission('Roles.Delete')) {
+            $roles_columns[] = 'Actions';
+        }
 
         $data['roles'] = $roles;
         $data['roles_columns'] = $roles_columns;
@@ -396,6 +459,12 @@ class Settings extends CI_Controller {
 
     public function editRole($role_id, $is_ajax = 0) {
     
+         
+        // restrict access to users who have Roles.Edit 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to edit system roles';
+
+        $this->auth->restrict($message, 'Roles.Edit');
         $this->load->model('role_model');
 
         $data['ajax'] = $is_ajax;
@@ -418,7 +487,12 @@ class Settings extends CI_Controller {
     }
 
     public function deleteRole($role_id, $is_ajax = 0) {
- 
+         
+        // restrict access to users who have Role.Delete 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to delete system roles';
+
+        $this->auth->restrict($message, 'Roles.Delete');
         $this->load->model('role_model');
 
         $message = array();
@@ -443,6 +517,11 @@ class Settings extends CI_Controller {
 
     public function createRole($is_ajax=0) {
          
+        // restrict access to users who have Roles.Add 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to view system roles';
+
+        $this->auth->restrict($message, 'Roles.Add');
         $data['ajax'] = $is_ajax;
 
         if($is_ajax) {
@@ -517,7 +596,11 @@ class Settings extends CI_Controller {
         
     public function rolePermissions() {
         
-       
+        // restrict access to users who have Permissions.Manage 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to manage system permissions';
+
+        $this->auth->restrict($message, 'Permissions.Manage');
         // SB Admin CSS - Include with every page
         $this->layout->add_css('sb-admin');
 
@@ -535,7 +618,8 @@ class Settings extends CI_Controller {
 
 
         $roles_permissions = $this->role_permission_model->find_all_roles_permissions();  
-
+        
+        $current_permissions = array();
 
         foreach($roles_permissions as $rp) {
 
@@ -553,12 +637,51 @@ class Settings extends CI_Controller {
         
     }
 
-    function saveRolePermissions() {
-        $data = $this->input->post();
+    function saveRolePermissions($is_ajax = 0) {
+        
+        // restrict access to users who have Permissions.Manage 
+        $message['type'] = 'warning';
+        $message['text'] = 'You dont have a permission to manage system permissions';
 
-        echo '<pre>';
-            print_r($data);
-        echo '</pre>';
+        $this->auth->restrict($message, 'Permissions.Manage');
+        
+        $message = array();
+
+        $this->load->model('role_permission_model');
+
+        $data = $this->input->post('permissions');
+        
+        $permissions = array();
+        
+    
+        foreach($data as $p) {
+            $role_permission= explode(',',$p);
+            $role_permission['role_id'] = $role_permission[0];
+            $role_permission['permission_id'] = $role_permission[1];            
+            unset($role_permission[0]);
+            unset($role_permission[1]);
+        
+            $permissions[] = $role_permission;    
+        }
+
+       
+        $this->role_permission_model->delete();
+            
+        if($this->role_permission_model->save_all($permissions)) {
+            $message['type'] = 'success';
+            $message['text'] = 'Role Permissions saved successfully';
+        }else {
+                
+                $message['type'] = $is_ajax?'error':'danger';
+                $message['text'] = 'An error occured while saving permissions.';
+       }
+
+       if($is_ajax) {
+           echo json_encode($data); 
+        }else {
+            $this->session->set_flashdata('action_message',$message);
+            redirect('settings/rolePermissions');    
+        } 
     }
 
 }

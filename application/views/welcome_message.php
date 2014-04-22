@@ -6,7 +6,15 @@
 </div>
 <!-- /.row -->
 <div class="row">
-	<div class="col-lg-8">
+    <div class="col-lg-8">
+        <?php if($this->session->flashdata('notification_message')) : 
+            $message = $this->session->flashdata('notification_message');?>
+                            <div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
+								<button type="button" class="close" data-dimiss="alert" aria-hidden="true">&times;</button>
+								<?php echo $message['text']; ?>
+							</div>
+		<?php endif; ?>
+
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example

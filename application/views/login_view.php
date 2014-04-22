@@ -28,13 +28,17 @@
                     </div>
                     <div class="panel-body">
                         <form role="form" action="<?php echo site_url('login/login');?>" method="post">
-							<?php if($this->session->flashdata('login_message')) :?>
-                            <div class="alert alert-danger alert-dismissable">
-								<button type="button" class="close" data-dimiss="alert" aria-hidden="true">x</button>
-								<?php echo $this->session->flashdata('login_message'); ?>
-							</div>
-							<?php endif; ?>
-							<fieldset>
+                            
+                        <?php if($this->session->flashdata('notification_message')) : 
+                            $message = $this->session->flashdata('notification_message');?>
+                            <div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
+                                <button type="button" class="close" data-dimiss="alert" aria-hidden="true">&times;</button>
+                                    <?php echo $message['text']; ?>
+                            </div>
+                        <?php endif; ?>
+
+    <div class="panel panel-default">
+                            <fieldset>
                                 <div class="form-group input-group">
 									<span class="input-group-addon">
 										<i class="fa fa-user"></i>
