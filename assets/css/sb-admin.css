@@ -309,6 +309,19 @@ table.dataTable thead .sorting:after {
 /*
 	Custom form styling
 */
+
+.spaceup {
+    margin-top: 20px;
+}
+.spacebottom {
+    margin-bottom: 20px;
+}
+.spaceleft {
+    margin-left: 20px;
+}
+.spaceright {
+    margin-right: 20px;
+}
 .panel-header-btn {
 	margin-top : -7px;
 }
