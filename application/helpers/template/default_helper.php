@@ -83,7 +83,7 @@ if(!defined('BASEPATH'))
 				<a href="#"><i class="fa fa-wrench fa-fw"></i> Sacrements<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li>
-						<a href="panels-wells.html">Bapteme</a>
+						<a href="'.site_url('sacrement/bapteme').'">Bapteme</a>
 					</li>
 					<li>
 						<a href="buttons.html">Communion</a>

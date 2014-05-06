@@ -16,6 +16,13 @@ class Institution_model extends CI_Model {
         
     }
 
+    public function get_all($filters) {
+        if(!empty($filters))
+            $this->db->where($filters);
+
+        return $this->db->get($this->table_name)->result(); 
+    }
+
     public function find($id) {
         $this->db->where('id_institution',$id);
 
@@ -52,5 +59,14 @@ class Institution_model extends CI_Model {
         $this->db->delete($this->table_name);
         return (bool) $this->db->affected_rows();
 
+    }
+    public function get_institutions_with_parent($filters) {
+
+        $query = $this->db->select('c.id_institution,c.nom_institution,p.nom_institution parent')
+            ->from('institution c')
+            ->join('institution p','c.parent_id = p.id_institution','left')
+            ->like('c.nom_institution',$filters['nom_institution'])
+            ->get();
+       return $query->result(); 
     }
 }

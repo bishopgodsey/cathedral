@@ -14,7 +14,7 @@
         <i class="fa fa-lock fa-fw"></i> Baptemes enregistres 
         <div class="pull-right">
             <?php if(has_permission('Bapteme.Add')) : ?>
-            <a title="Ajouter un nouveau bapteme" id="createBapteme" class="btn btn-primary panel-header-btn" href="<?php echo site_url('settings/createPermission');?>"><i title="Enregistrer un nouveau bapteme" class="fa fa-plus-circle"></i> Nouveau Bapteme</a>
+            <a title="Ajouter un nouveau bapteme" id="createBapteme" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createBapteme');?>"><i title="Enregistrer un nouveau bapteme" class="fa fa-plus-circle"></i> Nouveau Bapteme</a>
             <?php endif; ?>
         </div>
         

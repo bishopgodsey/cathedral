@@ -1,6 +1,6 @@
 <?php 
 
-class Bapteme_model extends CI_Controller {
+class Bapteme_model extends CI_Model {
 
     private $table_name = 'bapteme';
 
@@ -15,5 +15,11 @@ class Bapteme_model extends CI_Controller {
         }
 
        return $this->db->get($this->table_name)->result(); 
+    }
+
+    public function search($filters) {
+        $this->db->like($filters);
+
+        return $this->db->get($this->table_name)->result();
     }
 }
