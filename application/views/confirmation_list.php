@@ -1,6 +1,6 @@
  <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Baptemes</h1>
+        <h1 class="page-header">Permissions</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -11,10 +11,10 @@
     
     <div class="panel-heading">
         
-        <i class="fa fa-lock fa-fw"></i> Baptemes enregistres 
+        <i class="fa fa-lock fa-fw"></i> Confirmations
         <div class="pull-right">
-            <?php if(has_permission('Bapteme.Add')) : ?>
-            <a title="Ajouter un nouveau bapteme" id="createBapteme" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createBapteme');?>"><i title="Enregistrer un nouveau bapteme" class="fa fa-plus-circle"></i> Nouveau Bapteme</a>
+            <?php if(has_permission('Confirmation.Add')) : ?>
+            <a title="Ajouter un nouveau confirmation" id="createConfirmation" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createConfirmation');?>"><i title="Ajouter une confirmation" class="fa fa-plus-circle"></i> Ajouter une confirmation</a>
             <?php endif; ?>
         </div>
         
@@ -40,32 +40,33 @@
                 <thead>
                     <tr>
                     <th><?php echo form_checkbox('select_all','select_all[]',FALSE,'id="select_all"'); ?></th>
-                    <?php foreach($bapteme_columns as $column) : ?>
+                    <?php foreach($confirmation_columns as $column) : ?>
                         <th><?php echo $column; ?></th>
                     <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($baptemes as $bapteme) : ?>
+                    <?php foreach($confirmations as $confirmation) : ?>
                         <tr>
                             <td><?php echo form_checkbox('select_all','select_all[]'); ?></td>
-                            <td><?php echo $bapteme->num_carte_bapt; ?></td>
-                            <td><?php echo image($bapteme->photo,'Photo','width=36 height=36');?></td>
-                            <td><?php echo $bapteme->nom_bapt; ?></td>
-                            <td><?php echo $bapteme->prenom_bapt; ?></td>
-                            <td><?php echo $bapteme->date_bapt; ?></td>
-                            <td><?php echo $bapteme->parent_bapt_id; ?></td>
-                            <td><?php echo $bapteme->id_paroisse; ?></td>
-                            <?php if(has_permission('Bapteme.Edit') || has_permission('Bapteme.Delete')) : ?>    
+                            <td><?php echo image($confirmation['photo'],'Photo','width=36 height=36'); ?></td>
+                            <td><?php echo $confirmation['num_carte_bapt']; ?></td>
+                            <td><?php echo $confirmation['nom_bapt']; ?></td>
+                            <td><?php echo $confirmation['prenom_bapt']; ?></td>
+                            <td><?php echo $confirmation['date_confirmation']; ?></td>
+                            <td><?php echo $confirmation['parroisse_confirmation'] ?></td>
+                            <td><?php echo $confirmation['parroisse_communion'] ?></td>
+                            <td><?php echo $confirmation['parroisse_bapteme'] ?></td>
+                            <?php if(has_permission('Confirmation.Edit') || has_permission('Confirmation.Delete')) : ?>    
                             <td>
-                                <?php if(has_permission('Bapteme.Edit')) : ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editPermission/'.$bapteme->id_bapt);?>">
+                                <?php if(has_permission('Confirmation.Edit')) : ?>
+                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editConfirmation/'.$confirmation['id_confirmation']);?>">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <?php endif; ?>
                                 
-                                <?php if(has_permission('Bapteme.Delete')) : ?>
-                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deletePermission/'.$bapteme->id_bapt);?>">
+                                <?php if(has_permission('Confirmation.Delete')) : ?>
+                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deleteConfirmation/'.$confirmation['id_confirmation']);?>">
                                     <i class="fa fa-trash-o"></i> Delete
                                 </a>
                                 <?php endif; ?>

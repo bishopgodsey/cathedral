@@ -10,7 +10,7 @@
         that.$element = $(element);
         that.options = $.extend({}, $.fn.typeahead.defaults, options);
         that.$menu = $(that.options.menu).insertAfter(that.$element);
-
+	
         // Method overrides
         that.eventSupported = that.options.eventSupported || that.eventSupported;
         that.grepper = that.options.grepper || that.grepper;
@@ -23,6 +23,7 @@
         that.source = that.options.source || that.source;
         that.displayField = that.options.displayField || that.displayField;
         that.valueField = that.options.valueField || that.valueField;
+	that.onSelect = that.options.onSelect || that.onSelect;
 
         if (that.options.ajax) {
             var ajax = that.options.ajax;
@@ -85,6 +86,7 @@
 	    // this however forces the user to implement manual select.
 	    // in the future i have to expose an option of enable/disable auto selection. 
 	    // now implemented
+	
 	    if (this.options.autoSelect) {
             	this.$element
                     .val(this.updater(text))
@@ -440,7 +442,7 @@
         item: '<li><a href="#"></a></li>',
         displayField: 'name',
         valueField: 'id',
-	autoSelected : true,
+	autoSelect : true,
         onSelect: function() {
         },
         ajax: {

@@ -39,7 +39,7 @@ function js_url($name) {
 *@return image file url
 */
 function image_url($name) {
-	return base_url().'assets/css/'.$name;
+	return base_url().'assets/images/'.$name;
 }
 
 /*
@@ -47,8 +47,8 @@ function image_url($name) {
 *@param $alt : Optional Image alt attribute
 *@return image tag
 */
-function image($name, $alt='') {
-	return '<img src="'.image_url($name).'" alt="'.$alt.'"/>';
+function image($name, $alt='',$attr='') {
+	return '<img src="'.image_url($name).'" alt="'.$alt.'" '.$attr.' />';
 }
 
 /*

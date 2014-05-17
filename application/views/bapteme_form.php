@@ -32,7 +32,7 @@
             
         </ul>
 
-    <form id="bapteme_form" method="post" role="form"
+        <form id="bapteme_form" action="<?php echo site_url('sacrement/saveBapteme'); ?>"  method="post" role="form"
         data-bv-message="This value is not valid"
         data-bv-feedbackicons-valid="fa fa-check"
         data-bv-feedbackicons-invalid="fa fa-times"
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="domicile">Domicile</label>
+                            <label for="domicile">Domicile <span>*</span></label>
                             <input type="text" name="domicile_bapt" class="form-control" id="domicile" placeholder="Ou habite vous? "
                             data-bv-notempty data-bv-notempty-message="Veuillez indiquer le domicile">
                         </div>
@@ -101,8 +101,8 @@
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6"> 
                         <div class="form-group">
-                            <label for="numcarte">Numero carte</label>
-                            <input type="text" name="num_cart_bapt" class="form-control" 
+                            <label for="numcarte">Numero carte <span>*</span></label>
+                            <input type="text" name="num_carte_bapt" id="numcarte" class="form-control" 
                                 id="numcarte" placeholder="numero de la carte" 
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="Le numero de la carte ne peut pas etre vide" >
@@ -174,9 +174,9 @@
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
-                            <label for="date_marriage">Date Marriage</label>
+                            <label for="dateMariageParent">Date Marriage</label>
                             <div class="input-group date" data-date-format="YYYY-MM-DD">
-                            <input autocomplete="off" type="text" class="form-control" name="dateMarriageParent" id="dateMarriageParent"
+                            <input autocomplete="off" type="text" class="form-control" name="dateMariageParent" id="dateMariageParent"
                             data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" />
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                             </div> 
@@ -194,14 +194,14 @@
                             data-bv-regexp="true"
                             data-bv-regexp-regexp="[a-zA-Z0-9_\.]+"
                             data-bv-regexp-message="Le nom contient des caracteres invalide. Seuls les lettres, les chiffres et . et _ sont permis">
-                            <input type="hidden" id="parrain_id" name="parrain_id"/>
+                            <input type="hidden" id="parent_bapt_id" name="parent_bapt_id"/>
                         </div>
                     </div>
                     
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="prenom_pere">Prenom du parrain / Maraine <span>*</span></label>
-                            <input type="text" name="prenom_perain" class="form-control" id="prenom_parain" placeholder="Tapez quelques lettres"
+                            <input type="text" name="prenom_parain" class="form-control" id="prenom_parain" placeholder="Tapez quelques lettres"
 
                             data-bv-notempty data-bv-notempty-message="Le prenom du parrain ne peut pas etre vide"
                             data-bv-message="Le prenom du parrain est invalide"
@@ -229,8 +229,8 @@
                     
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
-                            <label for="id_parroisse">Parroisse<span>*</span></label>
-                            <select id="id_parroisse" name="id_parroisse" class="form-control" 
+                            <label for="id_paroisse">Parroisse<span>*</span></label>
+                            <select id="id_paroisse" name="id_paroisse" class="form-control" 
                                 data-bv-notempty data-bv-notempty-message="Vous devez selectionner une parroisse">
                             </select>
                         </div>
@@ -280,7 +280,7 @@
                         <div class="form-group">
                             <label for="lieu_ministere">Lieu du Ministere</label>
                             <input type="text" name="lieu_ministere" class="form-control" id="lieu_ministere">
-                            <input type="hidden" id="institution_id" name="institution_id"/>
+                            <input type="hidden" id="id_lieu_ministere" name="id_lieu_ministere"/>
                         </div>
 
                         <div class="form-group">
@@ -319,6 +319,7 @@
                 <li class="previous"><a href="#" class="validate">Previous</a></li>
                 <li class="next last" style="display:none;"><a href="#" class="validate">Last</a></li>
                 <li class="next"><a href="#" class="validate">Next</a></li>
+                <li class="next finish" id="save" style="display:none;"><a href="#">Save</a></li>
             </ul>
         </div>  
 <?php echo form_close(); ?> 

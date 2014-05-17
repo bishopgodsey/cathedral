@@ -33,7 +33,30 @@ $(function() {
                 options+='<option value="'+parroisse.id_institution+'">'+parroisse.nom_institution+'</options>'; 
             }
             
-            $('#id_parroisse').html(options);
+            $('#id_paroisse').html(options);
+        },
+        save : function(){
+
+            $('#save').on('click',function(e){ 
+                e.preventDefault();
+                var data = $('#bapteme_form').serialize();
+                var url = $('#bapteme_form').attr('action');
+                $.ajax({
+                    type : 'POST',
+                    url : url, 
+                    dataType : 'json',
+                    data : data,
+                    success : function(data) {
+                        console.log(data);
+                        Utils.notify(data);
+                    },
+                    error : function(xhr, err, desc) {
+                        Utils.notify(err+' : '+desc);
+                        console.log(xhr.responseText);
+                    }
+                });
+
+            });
         },
         utils : {
             showLoadingMask : function(state, input) {
@@ -92,6 +115,19 @@ $(function() {
                     var $current = index+1;
                     var $percent = ($current/$total) * 100;
                     $('#rootwizard').find('.progress-bar').css({width:$percent+'%'});
+
+                    // If it's the last tab then hide the last button and show the finish instead
+                    if($current >= $total) {
+                        $('#rootwizard').find('.pager .next').hide();
+                        $('#rootwizard').find('.pager .finish').show();
+                        $('#rootwizard').find('.pager .finish').removeClass('disabled');
+                    } else {
+                        $('#rootwizard').find('.pager .next').show();                                                           $('#rootwizard').find('.pager .finish, .pager .last').hide();
+                    }
+                },
+                onTabClick : function(tab, navigation, index) {
+
+                   return this.onNext(tab, navigation, index);
                 },
                 onNext : function(tab, navigation, index) {
                    $('#bapteme_form').bootstrapValidator('validate');
@@ -118,7 +154,7 @@ $(function() {
             var id_pere = $('input#pere_id');
             var nom_mere = $('input#nom_mere');
             var prenom_mere = $('input#prenom_mere');
-            var id_mere = $('input#pere_id');
+            var id_mere = $('input#mere_id');
             Bapteme.utils.autocomplete(
                     nom_pere,
                     {field : 'nom_bapt','sexe_bapt':'Masculin'},                 
@@ -187,7 +223,7 @@ $(function() {
             // nom parain/maraine
             var nom_parrain = $("input#nom_parain");
             var prenom_parrain = $("input#prenom_parain");
-            var id_parrain = $('input#parrain_id');
+            var id_parrain = $('input#parent_bapt_id');
 
             Bapteme.utils.autocomplete(
                     nom_parrain,
@@ -222,7 +258,7 @@ $(function() {
 
            
             var lieuMinistrere = $("input#lieu_ministere");
-            var institution_id = $("input#institution_id");
+            var institution_id = $("input#id_lieu_ministere");
             Bapteme.utils.autocomplete(
                 lieuMinistrere,
                 {
@@ -240,7 +276,7 @@ $(function() {
             );
 
             var lieuBapteme = $("input#lieu_bapt");
-            var lieuBapteme_id = $("input#lieu_bapt_id");
+            var lieuBapteme_id = $("input#id_lieu_bapteme");
             Bapteme.utils.autocomplete(
                 lieuBapteme,
                 {
@@ -264,5 +300,6 @@ $(function() {
     Bapteme.wizard();
     Bapteme.suggest();
     Bapteme.cascadeInstitutions();
+    Bapteme.save();
 
 });
