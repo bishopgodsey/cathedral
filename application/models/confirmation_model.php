@@ -30,7 +30,7 @@ class Confirmation_model extends CI_Model {
 
     public function get_confirmations() {
     
-        $sql = "SELECT con.id_confirmation,ba.num_carte_bapt, con.date_confirmation, con.id_paroisse, ba.photo,            ba.nom_bapt, ba.prenom_bapt, com.id_paroisse_communion, ba.id_paroisse
+        $sql = "SELECT con.id_confirmation,ba.num_carte_bapt, con.date_confirmation, con.id_paroisse id_paroisse_confirmation, ba.photo,            ba.nom_bapt, ba.prenom_bapt, com.id_paroisse_communion id_paroisse_communion, ba.id_paroisse id_paroisse_bapteme
             FROM confirmation con
             LEFT JOIN communion com ON con.id_communion = com.id_communion
             JOIN bapteme ba ON com.id_bapt = ba.id_bapt";
@@ -38,9 +38,9 @@ class Confirmation_model extends CI_Model {
 
         $this->load->model('institution_model');
         foreach($data as $key=>$d) {
-            $parroisse_confirmation = $this->institution_model->find($d['id_paroisse']);
-            $parroisse_communion = $this->institution_model->find($d['id_paroisse']);
-            $parroisse_bapteme = $this->institution_model->find($d['id_paroisse']);
+            $parroisse_confirmation = $this->institution_model->find($d['id_paroisse_confirmation']);
+            $parroisse_communion = $this->institution_model->find($d['id_paroisse_communion']);
+            $parroisse_bapteme = $this->institution_model->find($d['id_paroisse_bapteme']);
             $data[$key]['parroisse_confirmation'] = $parroisse_confirmation->nom_institution; 
             $data[$key]['parroisse_communion'] = $parroisse_communion->nom_institution; 
             $data[$key]['parroisse_bapteme'] = $parroisse_bapteme->nom_institution; 
@@ -58,7 +58,7 @@ class Confirmation_model extends CI_Model {
         $sql = "SELECT co.id_communion,ba.num_carte_bapt,ba.nom_bapt, ba.prenom_bapt 
             FROM communion co left join bapteme ba 
             on ba.id_bapt = co.id_bapt 
-            where ba.id_bapt like '%".$filter."%' 
+            where ba.num_carte_bapt like '%".$filter."%' 
             OR ba.nom_bapt like '%".$filter."%'
             OR ba.prenom_bapt like '%".$filter."%'";
 

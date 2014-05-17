@@ -199,7 +199,7 @@ class Sacrement extends CI_Controller {
 
         $message = array();
         if($this->confirmation_model->save_confirmation($data)) {
-            $messsage['text'] = 'La Confirmation a ete enregistre';
+            $message['text'] = 'La Confirmation a ete enregistre';
             $message['type'] = 'success';    
         }else {
             $messsage['text'] = 'Une erreur est survenue lors de l\'enregistrement.
@@ -217,8 +217,66 @@ class Sacrement extends CI_Controller {
         }
     }
 
-    public function communion() {
+    public function saveCommunion($is_ajax=false) {
     
+        $data = $this->input->post();
+        
+        if(!$is_ajax) {
+            $is_ajax = $data['ajax'];
+        }
+        unset($data['search']);
+        unset($data['lieu_conf']);
+
+        //TODO make same validations here
+        $this->load->model('communion_model');
+
+        $message = array();
+        if($this->communion_model->save_communion($data)) {
+            $message['text'] = 'La communion a ete enregistre';
+            $message['type'] = 'success';    
+        }else {
+            $messsage['text'] = 'Une erreur est survenue lors de l\'enregistrement. Reesayez SVP';
+            $message['type'] = $is_ajax?'error':'danger'; 
+        }
+
+        if($is_ajax) {
+            echo json_encode($message);
+        }else {
+            
+            $this->session->set_flashdata('action_message',$message);
+
+            redirect('sacrement/communions');
+        }
+    }
+
+    public function communions() {
+    
+        // Restrict access to users with Confirmation.View (View Permission ) permission
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have right to view Communions'), 'Communion.View');
+
+        // SB Admin CSS - Include with every page
+        $this->layout->add_css('sb-admin');
+
+        // SB Admin Scripts - Include with every page
+        $this->layout->add_js('sb-admin');
+
+        $this->load->model('communion_model');
+
+        $communions = $this->communion_model->get_communions();
+
+        $communions_columns = array('Photo','Num. Carte','Nom','Prenom','Date Communion',
+            'Parroisse Communion','Parroisse Bapteme');
+
+        if(has_permission('Communion.Edit') || has_permission('Communion.Delete')) {
+            $communions_columns[] = 'Actions';  
+        }
+
+        $data['communions'] = $communions;
+        $data['communions_columns'] = $communions_columns;
+                
+        $this->layout->view('communion_list',$data);
+         
     }
 
     public function confirmations() {
@@ -242,13 +300,56 @@ class Sacrement extends CI_Controller {
             'Parroisse Confirmation','Parroisse Communion','Parroisse Bapteme');
 
         if(has_permission('Confirmation.Edit') || has_permission('Confirmation.Delete')) {
-            $communion_columns[] = 'Actions';  
+            $confirmation_columns[] = 'Actions';  
         }
 
         $data['confirmations'] = $confirmations;
         $data['confirmation_columns'] = $confirmation_columns;
                 
         $this->layout->view('confirmation_list',$data);
+    }
+
+    public function createCommunion($is_ajax=false) {
+    
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have the permission to add Communion'), 'Communion.Add');
+
+        $data['ajax'] = $is_ajax;
+
+        $this->load->model('institution_model');
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+
+        if($is_ajax) {
+            $this->load->view('communion_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('confirmation');
+
+            $this->layout->view('communion_form',$data);
+        }
     }
 
     public function createConfirmation($is_ajax=false) {

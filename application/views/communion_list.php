@@ -1,6 +1,6 @@
  <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Confirmations</h1>
+        <h1 class="page-header">Communions</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -11,10 +11,10 @@
     
     <div class="panel-heading">
         
-        <i class="fa fa-lock fa-fw"></i> Confirmations
+        <i class="fa fa-lock fa-fw"></i> Communions
         <div class="pull-right">
-            <?php if(has_permission('Confirmation.Add')) : ?>
-            <a title="Ajouter un nouveau confirmation" id="createConfirmation" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createConfirmation');?>"><i title="Ajouter une confirmation" class="fa fa-plus-circle"></i> Ajouter une confirmation</a>
+            <?php if(has_permission('Communion.Add')) : ?>
+            <a title="Ajouter une nouvelle communion" id="createCommunion" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createCommunion');?>"><i title="Ajouter une comunion" class="fa fa-plus-circle"></i> Ajouter une communion</a>
             <?php endif; ?>
         </div>
         
@@ -40,33 +40,32 @@
                 <thead>
                     <tr>
                     <th><?php echo form_checkbox('select_all','select_all[]',FALSE,'id="select_all"'); ?></th>
-                    <?php foreach($confirmation_columns as $column) : ?>
+                    <?php foreach($communions_columns as $column) : ?>
                         <th><?php echo $column; ?></th>
                     <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($confirmations as $confirmation) : ?>
+                    <?php foreach($communions as $communion) : ?>
                         <tr>
                             <td><?php echo form_checkbox('select_all','select_all[]'); ?></td>
-                            <td><?php echo image($confirmation['photo'],'Photo','width=36 height=36'); ?></td>
-                            <td><?php echo $confirmation['num_carte_bapt']; ?></td>
-                            <td><?php echo $confirmation['nom_bapt']; ?></td>
-                            <td><?php echo $confirmation['prenom_bapt']; ?></td>
-                            <td><?php echo $confirmation['date_confirmation']; ?></td>
-                            <td><?php echo $confirmation['parroisse_confirmation'] ?></td>
-                            <td><?php echo $confirmation['parroisse_communion'] ?></td>
-                            <td><?php echo $confirmation['parroisse_bapteme'] ?></td>
-                            <?php if(has_permission('Confirmation.Edit') || has_permission('Confirmation.Delete')) : ?>    
+                            <td><?php echo image($communion['photo'],'Photo','width=36 height=36'); ?></td>
+                            <td><?php echo $communion['num_carte_bapt']; ?></td>
+                            <td><?php echo $communion['nom_bapt']; ?></td>
+                            <td><?php echo $communion['prenom_bapt']; ?></td>
+                            <td><?php echo $communion['date_communion']; ?></td>
+                            <td><?php echo $communion['parroisse_communion'] ?></td>
+                            <td><?php echo $communion['parroisse_bapteme'] ?></td>
+                            <?php if(has_permission('Communion.Edit') || has_permission('Communion.Delete')) : ?>    
                             <td>
-                                <?php if(has_permission('Confirmation.Edit')) : ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editConfirmation/'.$confirmation['id_confirmation']);?>">
+                                <?php if(has_permission('Communion.Edit')) : ?>
+                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editCommunion/'.$communion['id_communion']);?>">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <?php endif; ?>
                                 
-                                <?php if(has_permission('Confirmation.Delete')) : ?>
-                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deleteConfirmation/'.$confirmation['id_confirmation']);?>">
+                                <?php if(has_permission('Communion.Delete')) : ?>
+                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deleteCommunion/'.$communion['id_communion']);?>">
                                     <i class="fa fa-trash-o"></i> Delete
                                 </a>
                                 <?php endif; ?>

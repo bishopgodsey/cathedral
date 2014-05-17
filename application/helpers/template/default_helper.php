@@ -86,10 +86,10 @@ if(!defined('BASEPATH'))
 						<a href="'.site_url('sacrement/bapteme').'">Bapteme</a>
 					</li>
 					<li>
-						<a href="buttons.html">Communion</a>
+                    <a href="'.site_url('sacrement/communions').'">Communion</a>
 					</li>
 					<li>
-						<a href="notifications.html">Confirmation</a>
+						<a href="'.site_url('sacrement/confirmations').'">Confirmation</a>
 					</li>
 					<li>
 						<a href="typography.html">Marriage</a>
