@@ -401,6 +401,74 @@ class Sacrement extends CI_Controller {
 
     public function deces() {
     
+        // Restrict access to users with Confirmation.View (View Permission ) permission
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have right to view Communions'), 'Deces.View');
+
+        // SB Admin CSS - Include with every page
+        $this->layout->add_css('sb-admin');
+
+        // SB Admin Scripts - Include with every page
+        $this->layout->add_js('sb-admin');
+
+        $this->load->model('deces_model');
+
+        $deces = $this->deces_model->get_deces();
+
+        $deces_columns = array('Photo','Num. Enterement','Nom','Prenom','Date Naissance','Date Deces');
+
+        if(has_permission('Deces.Edit') || has_permission('Deces.Delete')) {
+            $deces_columns[] = 'Actions';  
+        }
+
+        $data['deces'] = $deces;
+        $data['deces_columns'] = $deces_columns;
+                
+        $this->layout->view('deces_list',$data);
+    }
+
+    function createDeces($is_ajax=false) {
+
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have the permission to add Communion'), 'Deces.Add');
+
+        $data['ajax'] = $is_ajax;
+
+        $this->load->model('institution_model');
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+
+        if($is_ajax) {
+            $this->load->view('deces_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('confirmation');
+
+            $this->layout->view('deces_form',$data);
+        }
+
     }
 
 } 
