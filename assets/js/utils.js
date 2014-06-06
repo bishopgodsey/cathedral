@@ -33,11 +33,25 @@
                   ]
                 });
         },
-        showLoader : function(message,id) {
+        showLoader : function(id,message) {
             var template = '<span class="loader" style="font-weight:bold;">'+(message||'Working...')+' <img src="../assets/images/spinner-mini.gif"/></span>';
             $('#'+id).html(template);;
         },
         hideLoader : function(id) {
             $('#'+id).html('');
+        },
+        bootstrapValidate : function(form_id) {
+            
+            var children = $('#'+form_id).find('input');
+            var validationFailed = false;
+            children.each(function(index,element){
+                 if($(element).parent('div').hasClass('has-error')){
+                     validationFailed = true;
+                     return false;
+                 }
+            });
+
+            //if validation failed return false to prevent default action
+            return !validationFailed;
         }
     };

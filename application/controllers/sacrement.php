@@ -13,6 +13,39 @@ class Sacrement extends CI_Controller {
         echo 'listing all sacrements';  
     }
 
+    public function savePersonne($is_ajax=false) {
+
+        $this->load->model('personne_model');
+        $data = $this->input->post();
+
+        $message = array();
+
+        $inserted_id = $this->personne_model->savePersonne($data);
+
+        $result = array();
+        if($inserted_id > 0 ) { 
+            $message['type']='success';
+            $message['text'] = 'Bien enregistre!';
+
+            $result['personne_id'] = $inserted_id;
+            $result['message'] = $message;
+        }else {
+
+            $message['type'] = 'error';
+            $message['text'] = 'An error occured';
+            $result['personne_id'] = '';
+            $result['message'] = $message;
+        }
+
+        if($is_ajax) {
+            echo json_encode($result); 
+        }else {
+            echo '<pre>';
+                print_r($message);
+            echo '</pre>';
+        }
+    }
+
     public function bapteme() {
                  
         // Restrict access to users with Bapteme.View (View Permission ) permission
@@ -134,6 +167,21 @@ class Sacrement extends CI_Controller {
         echo json_encode($result);
     }
 
+    public function suggestMarriage($filters='') {
+        
+        $params = !empty($filters)?$filters:$this->input->get(NULL,TRUE);
+        $this->load->model('marrige_model'); 
+        $raw_resutl = $this->confirmation_model->suggest_communion($params['key']);
+
+        $result = array();
+        foreach($raw_resutl as $raw) {
+            $name = $raw->num_carte_bapt.'-'.$raw->nom_bapt.'-'.$raw->prenom_bapt;
+            array_push($result, array('id'=>json_encode($raw),'name'=>$name));  
+        }
+
+        echo json_encode($result);
+    }
+
     function suggestConfirmation($filters='') {
 
         $params = !empty($filters)?$filters:$this->input->get(NULL,TRUE);
@@ -148,6 +196,22 @@ class Sacrement extends CI_Controller {
 
         echo json_encode($result);
         
+    }
+
+    function suggestBaptise($filters='') {
+    
+        $params = !empty($filters)?$filters:$this->input->get(NULL,TRUE);
+        
+        $this->load->model('bapteme_model'); 
+        $raw_resutl = $this->bapteme_model->suggest_baptise($params['key']);
+
+        $result = array();
+        foreach($raw_resutl as $raw) {
+            $name = $raw->num_carte_bapt.'-'.$raw->nom_bapt.'-'.$raw->prenom_bapt;
+            array_push($result, array('id'=>$raw->id_bapt,'name'=>$name));  
+        }
+
+        echo json_encode($result);
     }
 
     public function saveBapteme($is_ajax = false) {
@@ -397,6 +461,75 @@ class Sacrement extends CI_Controller {
 
     public function marriage() {
     
+        // Restrict access to users with Confirmation.View (View Permission ) permission
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have right to view Marriages'), 'Marriage.View');
+
+        // SB Admin CSS - Include with every page
+        $this->layout->add_css('sb-admin');
+
+        // SB Admin Scripts - Include with every page
+        $this->layout->add_js('sb-admin');
+
+        $this->load->model('marriage_model');
+
+        $marriages = $this->marriage_model->get_marriages();
+
+        $marriage_columns = array('Num Marriage','Mari','Epouse','Parrain','Marraine',
+            'Date Marriage');
+
+        if(has_permission('Marriage.Edit') || has_permission('Marriage.Delete')) {
+            $marriage_columns[] = 'Actions';  
+        }
+
+        $data['marriages'] = $marriages;
+        $data['marriage_columns'] = $marriage_columns;
+                
+        $this->layout->view('marriage_list',$data);
+    }
+
+    public function createMarriage($is_ajax = false) {
+        
+        $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have the permission to add marriages'), 'Marriage.Add');
+
+        $data['ajax'] = $is_ajax;
+        $this->load->model('institution_model');
+
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+
+        if($is_ajax) {
+            $this->load->view('bapteme_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+            $this->layout->add_css('chosen.min');
+
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('jquery.bootstrap.wizard.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('marriage');
+            $this->layout->view('marriage_form',$data);
+        }
     }
 
     public function deces() {
@@ -464,11 +597,139 @@ class Sacrement extends CI_Controller {
             // SB Admin Scripts - Include with every page
             $this->layout->add_js('sb-admin');
             $this->layout->add_js('utils');
-            $this->layout->add_js('confirmation');
+            $this->layout->add_js('deces');
 
             $this->layout->view('deces_form',$data);
         }
 
+    }
+
+    public function saveDeces($is_ajax = false) {
+
+        $errors = array();
+
+        $data = $this->input->post();
+
+        $this->load->library('form_validation');
+
+        $config = array(
+                array(
+                    'field' => 'id_bapt',
+                    'label' => 'Une personne',
+                    'rules' => 'callback_check_baptise'
+                ),
+                array(
+                    'field' => 'id_nonBaptise',
+                    'label' => 'Une personne',
+                    'rules' => 'callback_check_non_baptise'
+                ),
+               array(
+                     'field'   => 'num_enterrement', 
+                     'label'   => 'Numero d\'enterrement', 
+                     'rules'   => 'required|trim'
+                  ),
+               array(
+                     'field'   => 'date_deces', 
+                     'label'   => 'Date de deces', 
+                     'rules'   => 'required'
+                  ),
+               array(
+                     'field'   => 'date_enterrement', 
+                     'label'   => 'Date d\'enterrement', 
+                     'rules'   => 'required'
+                  ),   
+               array(
+                     'field'   => 'id_diocese', 
+                     'label'   => 'Diocese', 
+                     'rules'   => 'required|is_natural'
+                  ),
+                array(
+                    'field' => 'id_paroisse',
+                    'label' => 'Parroisse',
+                    'rules'=>'required'
+                ),
+                array(
+                    'field' => 'lieu_cel',
+                    'label' => 'Lieu',
+                    'rules'=>'required|required'
+                ),
+                array(
+                    'field' => 'nom_celebrant',
+                    'label' => 'Nom Celebrant',
+                    'rules'=>'required'
+                ),
+                array(
+                    'field' => 'prenom_celebrant',
+                    'label' => 'Prenom Celebrant',
+                    'rules'=>'required'
+                )
+            );
+
+        $this->form_validation->set_rules($config);
+        
+        if($this->form_validation->run()===FALSE) {
+        
+            $this->createDeces($is_ajax);
+        }else {
+            
+            $id_bapteme = $data['id_bapt'];
+            $id_personne = $data['id_nonBaptise'];
+            $type = $data['type_personne'];
+
+            unset($data['search']);
+            unset($data['lieu_cel']);
+            unset($data['type_personne']);
+
+            if(!$id_bapteme && !$id_personne) {
+
+                //something is wrong
+                echo 'something is wrong with the user';
+                exit;
+            }
+            
+            $this->load->model('deces_model');
+
+            if($this->deces_model->save_deces($data)) {
+            
+                $message['text'] = 'Le deces a ete enregistre';
+                $message['type'] = 'success';    
+            }else {
+            
+                $message['text'] = 'Une erreur est survenue lors de l\'enregistrement du deces. Reesayer SVP!';
+                $message['type'] = ($is_ajax)?'error':'danger';    
+            }
+
+            if($is_ajax) {
+                echo json_encode($message); 
+            }else {
+            
+                $this->session->set_flashdata('action_message',$message);
+
+                redirect('sacrement/deces');
+            }
+        }    
+    }
+
+    function check_baptise($value) {
+        $this->load->library('form_validation');
+        $id_non_baptise = $this->input->post('id_nonBaptise'); 
+        if($value || $id_non_baptise) {
+           return TRUE; 
+        }
+
+       $this->form_validation->set_message('check_baptise','Veuillez Selectionnez une personne');
+       return FALSE; 
+    }
+    
+    function check_non_baptise($value) {
+        $this->load->library('form_validation');
+        $id_baptise = $this->input->post('id_bapt'); 
+        if($value || $id_baptise) {
+           return TRUE; 
+        }
+
+        $this->form_validation->set_message('check_non_baptise','Veuillez Selectionnez une personne');
+       return FALSE; 
     }
 
 } 

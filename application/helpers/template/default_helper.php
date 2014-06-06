@@ -92,10 +92,10 @@ if(!defined('BASEPATH'))
 						<a href="'.site_url('sacrement/confirmations').'">Confirmation</a>
 					</li>
 					<li>
-						<a href="typography.html">Marriage</a>
+                        <a href="'.site_url('sacrement/marriage').'">Marriage</a>
 					</li>
 					<li>
-						<a href="grid.html">Deces</a>
+                        <a href="'.site_url('sacrement/deces').'">Deces</a>
 					</li>
 				</ul>
 				<!-- /.nav-second-level -->

@@ -29,13 +29,33 @@ class Deces_model extends CI_Model {
     }
 
     public function get_deces() {
-    
-        $sql = "SELECT d.id_deces, d.num_enterrement, d.date_deces, ba.photo, ba.nom_bapt, ba.prenom_bapt, ba.date_naissance
-            FROM deces d
-            JOIN bapteme ba ON d.id_bapt = ba.id_bapt";
-        
-        $data = $this->db->query($sql)->result_array(); 
+     
+        $data = $this->db->get($this->table_name)->result_array(); 
 
+        foreach($data as $k=>$d) {
+
+            if($d['id_bapt'] && !$d['id_nonBaptise']) {
+
+                $this->load->model('bapteme_model');
+                $data_baptise = $this->bapteme_model->find($d['id_bapt']);
+                $d['photo'] = $data_baptise->photo;
+                $d['nom_bapt'] = $data_baptise->nom_bapt;
+                $d['prenom_bapt'] = $data_baptise->prenom_bapt;
+                $d['date_naissance'] = $data_baptise->date_naissance; 
+            }
+
+            if($d['id_nonBaptise'] && !$d['id_bapt']) {
+            
+                $this->load->model('personne_model');
+                $data_no_baptise = $this->personne_model->find($d['id_nonBaptise']); 
+                $d['photo'] = $data_no_baptise->photo;
+                $d['nom_bapt'] = $data_no_baptise->nom;
+                $d['prenom_bapt'] = $data_no_baptise->prenom;
+                $d['date_naissance'] = $data_no_baptise->date_naissance; 
+            }
+
+            $data[$k] = $d;
+        }
         return $data;
     }
 

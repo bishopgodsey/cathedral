@@ -36,8 +36,6 @@ $(function(){
             siteUrl = window._g_site_url+'sacrement/suggestConfirmation';
             search.typeahead({
                onSelect : function(item) {
-                   console.log('value ');
-                   console.log(item);
                     id_communion.val(item.value);
                },
                ajax : {

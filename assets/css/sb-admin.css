@@ -349,3 +349,13 @@ table.dataTable thead .sorting:after {
 #permissions_table tr:last-child {
     border-bottom: 1px solid #ddd;
 }
+
+/* Overrides default icons position on input group */
+form .has-feedback .date .form-control-feedback {
+    top: 0;
+    right: 35px;
+}
+
+form .has-feedback .input-group .form-control-feedback {
+    top : 0;
+}
