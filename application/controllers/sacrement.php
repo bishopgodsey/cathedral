@@ -170,8 +170,8 @@ class Sacrement extends CI_Controller {
     public function suggestMarriage($filters='') {
         
         $params = !empty($filters)?$filters:$this->input->get(NULL,TRUE);
-        $this->load->model('marrige_model'); 
-        $raw_resutl = $this->confirmation_model->suggest_communion($params['key']);
+        $this->load->model('marriage_model'); 
+        $raw_resutl = $this->marriage_model->suggest_marriage($params['input']);
 
         $result = array();
         foreach($raw_resutl as $raw) {
@@ -532,6 +532,111 @@ class Sacrement extends CI_Controller {
         }
     }
 
+    public function saveMarriage($is_ajax=false) {
+
+        $this->load->model(array('personne_model','marriage_model'));
+        $data = $this->input->post();
+        
+        $is_mari_catholic = $data['type_personne']==='chretien';   
+        $is_epouse_catholic = $data['type_personne5']==='chretien';   
+        $is_parrain_catholic = $data['type_personne2']==='chretien';   
+        $is_marraine_catholic = $data['type_personne3']==='chretien';
+
+        $marriage = array();
+        $marriage['num_marriage'] = $data['num_marriage'];
+        $marriage['date_marriage'] = $data['date_marriage'];
+        $marriage['nom_celebrant'] = $data['nom_celebrant'];
+        $marriage['prenom_celebrant'] = $data['prenom_celebrant'];
+        $marriage['id_lieu_ministere'] = $data['id_lieu_ministere'];
+        $marriage['diocese_id'] = $data['id_diocese'];
+        $marriage['parroisse_id'] = $data['id_paroisse'];
+        $marriage['lieu_celebration_id'] = $data['lieu_celebration_id'];
+
+        if($is_mari_catholic) {
+           $marriage['conjoint_id'] = $data['conjoint_id'];      
+        }else {
+            $mari_data = array();
+            $mari_data['nom'] = $data['nom'];
+            $mari_data['prenom'] = $data['prenom'];
+            $mari_data['sexe'] = $data['sexe'];
+            $mari_data['date_naissance'] = $data['date_naissance'];
+            $mari_data['adresse'] = $data['adresse'];
+            $mari_data['tel'] = $data['tel'];
+            $mari_data['email'] = $data['email'];
+            $mari_data['religion'] = 'No Catholique';
+
+            $marriage['no_catholique_conjoint_id'] = $this->personne_model->savePersonne($mari_data);
+        }
+
+        if($is_epouse_catholic) {
+            $marriage['conjointe_id'] = $data['conjointe_id'];            
+        }else {
+            $epouse_data = array();
+            $epouse_data['nom'] = $data['nom_epouse'];
+            $epouse_data['prenom'] = $data['prenom_epouse'];
+            $epouse_data['sexe'] = $data['sexe_epouse'];
+            $epouse_data['date_naissance'] = $data['date_naissance_epouse'];
+            $epouse_data['adresse'] = $data['adresse_epouse'];
+            $epouse_data['tel'] = $data['tel_epouse'];
+            $epouse_data['email'] = $data['email_epouse'];
+            $epouse_data['religion'] = 'No Catholique';
+            
+            $marriage['no_catholique_conjointe_id'] = $this->personne_model->savePersonne($epouse_data);
+        }
+        
+        if($is_parrain_catholic) {
+            $marriage['parrain_id'] = $data['parrain_id'];
+        }else {
+            $parrain_data = array();
+            $parrain_data['nom'] = $data['nom_parrain'];
+            $parrain_data['prenom'] = $data['prenom_parrain'];
+            $parrain_data['sexe'] = $data['sexe_parrain'];
+            $parrain_data['date_naissance'] = $data['date_naissance_parrain'];
+            $parrain_data['adresse'] = $data['adresse_parrain'];
+            $parrain_data['tel'] = $data['tel_parrain'];
+            $parrain_data['email'] = $data['email_parrain'];
+            $parrain_data['religion'] = 'No Catholique';
+            
+            $marriage['no_catholique_parrain_id'] = $this->personne_model->savePersonne($parrain_data);
+        }
+
+        if($is_marraine_catholic) {
+            $marriage['marraine_id'] = $data['marraine_id'];
+        }else {
+            $marraine_data = array();
+            $marraine_data['nom'] = $data['nom_marraine'];
+            $marraine_data['prenom'] = $data['prenom_marraine'];
+            $marraine_data['sexe'] = $data['sexe_marraine'];
+            $marraine_data['date_naissance'] = $data['date_naissance_marraine'];
+            $marraine_data['adresse'] = $data['adresse_marraine'];
+            $marraine_data['tel'] = $data['tel_marraine'];
+            $marraine_data['email'] = $data['email_marraine'];
+            $marraine_data['religion'] = 'No Catholique';
+            
+            $marriage['no_catholique_marraine_id'] = $this->personne_model->savePersonne($marraine_data);
+        }
+
+        unset($data);
+
+        $message = array();
+        if($this->marriage_model->save_marriage($marriage)) {
+           $message['text'] = 'Le marriage a ete enregistre'; 
+           $message['type'] = 'success'; 
+        }else {
+            $message['text'] = 'Le marriage a ete enregistre'; 
+            $message['type'] = $is_ajax?'error':'danger'; 
+        }
+        
+        if($is_ajax) {
+            echo json_encode($message);
+        }else {
+            
+            $this->session->set_flashdata('action_message',$message);
+
+            redirect('sacrement/communions');
+        }
+    }
+
     public function deces() {
     
         // Restrict access to users with Confirmation.View (View Permission ) permission
@@ -560,7 +665,7 @@ class Sacrement extends CI_Controller {
         $this->layout->view('deces_list',$data);
     }
 
-    function createDeces($is_ajax=false) {
+    public function createDeces($is_ajax=false) {
 
         $this->auth->restrict(array('type'=>'warning',
             'text'=>'You dont have the permission to add Communion'), 'Deces.Add');
