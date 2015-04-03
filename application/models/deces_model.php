@@ -64,4 +64,13 @@ class Deces_model extends CI_Model {
 
         return $this->db->get($this->table_name)->result();
     }
+
+	public function getDeces($id){
+		$sql="SELECT conf.id_confirmation, com.id_communion,  com.numero_communion, ba.num_carte_bapt, conf.num_confirmation, conf.professionConfirmation, conf.date_confirmation, ba.photo, ba.nom_bapt, ba.prenom_bapt, 
+			  com.profession_communion, com.id_paroisse_communion, conf.nom_celebrant, conf.prenom_celebrant, ba.id_paroisse id_paroisse_bapteme, conf.id_lieu_conf FROM confirmation conf
+			  JOIN communion com ON com.id_communion=conf.id_communion
+			  JOIN bapteme ba ON com.id_bapt = ba.id_bapt WHERE conf.id_confirmation=".$id."";
+
+			return $this->db->query($sql)->row_array();
+	}
 }
