@@ -41,8 +41,8 @@ class Marriage_model extends CI_Model {
 
             $husband = null;
             if($d['conjoint_id']) {
-                $husband = $this->bapteme_model->find($d['conjoint_id']); 
-                $data[$key]['husband'] = ($husband)?$husband->nom_bapt.' '.$husband->prenom_bapt:''; 
+                $husband = $this->confirmation_model->getConfirmation($d['conjoint_id']); 
+                $data[$key]['husband'] = ($husband)?$husband['nom_bapt'].' '.$husband['prenom_bapt']:''; 
             }else {
                 
                 $husband = $this->personne_model->find($d['no_catholique_conjoint_id']); 
@@ -51,8 +51,8 @@ class Marriage_model extends CI_Model {
  
             $wife = null;
             if($d['conjointe_id']) {
-                $wife = $this->bapteme_model->find($d['conjointe_id']); 
-                $data[$key]['wife'] = ($wife)?$wife->nom_bapt.' '.$wife->prenom_bapt:''; 
+                $wife = $this->confirmation_model->getConfirmation($d['conjointe_id']);  
+                $data[$key]['wife'] = ($wife)?$wife['nom_bapt'].' '.$wife['prenom_bapt']:''; 
             }else {
                 
                 $wife = $this->personne_model->find($d['no_catholique_conjointe_id']); 
@@ -61,8 +61,8 @@ class Marriage_model extends CI_Model {
 
             $parrain = null;
             if($d['parrain_id']) {
-                $parrain = $this->bapteme_model->find($d['parrain_id']);
-                $data[$key]['parrain'] = ($parrain)?$parrain->nom_bapt.' '.$parrain->prenom_bapt:''; 
+                $parrain = $this->confirmation_model->getConfirmation($d['parrain_id']);
+                $data[$key]['parrain'] = ($parrain)?$parrain['nom_bapt'].' '.$parrain['prenom_bapt']:''; 
             }else {
                 $parrain = $this->personne_model->find($d['no_catholique_parrain_id']);
                 $data[$key]['parrain'] = ($parrain)?$parrain->nom.' '.$parrain->prenom:''; 
@@ -70,8 +70,8 @@ class Marriage_model extends CI_Model {
 
             $marraine = null;
             if($d['marraine_id']) {
-                $marraine = $this->bapteme_model->find($d['marraine_id']);
-                $data[$key]['marraine'] = ($marraine)?$marraine->nom_bapt.' '.$marraine->prenom_bapt:''; 
+                $marraine = $this->confirmation_model->getConfirmation($d['marraine_id']);
+                $data[$key]['marraine'] = ($marraine)?$marraine['nom_bapt'].' '.$marraine['prenom_bapt']:''; 
             }else{
                 $marraine = $this->personne_model->find($d['no_catholique_marraine_id']); 
                 $data[$key]['marraine'] = ($marraine)?$marraine->nom.' '.$marraine->prenom:''; 
@@ -102,5 +102,11 @@ class Marriage_model extends CI_Model {
 
         return $this->db->query($sql)->result();
     }
+	
+	public function details($id_mariage){
+		$this->db->where('marriage_id', $id_mariage);
+		
+		return $this->db->get($this->table_name)->row_array();
+	}
 
 }
