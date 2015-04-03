@@ -50,10 +50,11 @@ data-bv-feedbackicons-validating="fa fa-spinner">
         <div class="col-sm-2 col-md-8 col-lg-8">
             <div class="input-group"> 
             <span class="input-group-addon"><span class="fa fa-search fa-lg"></span></span>
-            <input type="text" autocomplete="off" name="search" class="form-control input-lg" id="search" placeholder="Chercher par Numero carte de Bapteme, Nom ou Prenom" data-bv-notempty data-bv-notempty-message="Veuillez selectionner un chretien"/>
+            <input type="text" autocomplete="off	" name="search" class="form-control input-lg" id="search" placeholder="Chercher par Numero carte de Bapteme, Nom ou Prenom" data-bv-notempty data-bv-notempty-message="Veuillez selectionner un chretien"
+			value="<?php echo $confirmation['num_carte_bapt']."-".$confirmation['nom_bapt']."-".$confirmation['prenom_bapt'];?>"/>
             </div>
         </div>
-            <input type="hidden" name="id_communion" id="id_communion"/>
+            <input type="hidden" id="id_communion" name="id_communion" value="<?php echo $confirmation['id_communion'];?>"/>
         </div>
     </div>
     <div class="col-sm-12 col-lg-12 col-md-12">
@@ -62,16 +63,17 @@ data-bv-feedbackicons-validating="fa fa-spinner">
     <div class="row">
         <div class="col-sm-6 col-md-6 col-lg-6">         
             <div class="form-group">
+            	<input type="hidden" name="id_confirmation" value='<?php echo $confirmation['id_confirmation']; ?>'/>
                 <label for="num_confirmation">Numero Confirmation <span>*</span></label>
                 <input type="text" name="num_confirmation" class="form-control" id="num_confirmation" placeholder="Numero de Confirmation"
-                data-bv-notempty data-bv-notempty-message="Indiquer le numero de confirmation SVP!">
+                data-bv-notempty data-bv-notempty-message="Indiquer le numero de confirmation SVP!" value="<?php echo $confirmation['num_confirmation'];?>"/>
             </div>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="form-group">
                 <label for="profession">Profession </label>
                 <input type="text" name="professionConfirmation" id="profession" class="form-control" 
-                    id="profession" placeholder="Profession du chretien">
+                    id="profession" placeholder="Profession du chretien" value="<?php echo $confirmation['professionConfirmation'];?>"/>
             </div>
         </div>
          
@@ -104,8 +106,8 @@ data-bv-feedbackicons-validating="fa fa-spinner">
             <div class="form-group">
                 <label for="lieu_bapt">Lieu Confirmation <span>*</span></label>
                 <input type="text" autocomplete="off" name="lieu_conf" class="form-control" id="lieu_conf" placeholder="Tapez quelques lettres pour selectionner" 
-            data-bv-notempty data-bv-notempty-message="Le lieu de bapteme ne peut pas etre vide">
-                <input type="hidden" id="id_lieu_conf" name="id_lieu_conf"/> 
+            data-bv-notempty data-bv-notempty-message="Le lieu de bapteme ne peut pas etre vide" value="<?php echo $confirmation['lieu_conf'];?>">
+                <input type="hidden" id="id_lieu_conf" name="id_lieu_conf" value="<?php echo $confirmation['id_lieu_conf'];?>"/> 
             </div>
         </div>
         
@@ -115,7 +117,7 @@ data-bv-feedbackicons-validating="fa fa-spinner">
                 <div class="input-group date" data-date-format="YYYY-MM-DD">
                 <input autocomplete="off" type="text" class="form-control" name="date_confirmation" id="date_confirmation"                     
                     data-bv-notempty data-bv-notempty-message="La date de bapteme est requis"
-                    data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" />
+                    data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" value="<?php echo $confirmation['date_confirmation']?>"/>
                     <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                 </div> 
             </div>
@@ -134,7 +136,7 @@ data-bv-feedbackicons-validating="fa fa-spinner">
                 data-bv-message="Le nom du celebrant est invalide"
                 data-bv-regexp="true"
                 data-bv-regexp-regexp="[a-zA-Z0-9_\.]+"
-                data-bv-regexp-message="Le nom contient des caracteres invalide. Seuls les lettres, les chiffres et . et _ sont permis">
+                data-bv-regexp-message="Le nom contient des caracteres invalide. Seuls les lettres, les chiffres et . et _ sont permis" value="<?php echo $confirmation['nom_celebrant'];?>"/>
             </div>
         </div> 
         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -146,7 +148,7 @@ data-bv-feedbackicons-validating="fa fa-spinner">
                 data-bv-message="Le prenom du parain est invalide"
                 data-bv-regexp="true"
                 data-bv-regexp-regexp="[a-zA-Z0-9_\.]+"
-                data-bv-regexp-message="Le nom contient des caracteres invalide. Seuls les lettres, les chiffres et . et _ sont permis">
+                data-bv-regexp-message="Le nom contient des caracteres invalide. Seuls les lettres, les chiffres et . et _ sont permis" value="<?php echo $confirmation['prenom_celebrant'];?>"/>
             </div>
         </div>
     </div>
