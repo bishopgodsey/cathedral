@@ -54,12 +54,13 @@
                             <td><?php echo $communion['nom_bapt']; ?></td>
                             <td><?php echo $communion['prenom_bapt']; ?></td>
                             <td><?php echo $communion['date_communion']; ?></td>
-                            <td><?php echo $communion['parroisse_communion'] ?></td>
-                            <td><?php echo $communion['parroisse_bapteme'] ?></td>
+                            <td><?php echo $communion['parroisse_communion']; ?></td>
+                            <td><?php echo $communion['parroisse_bapteme']; ?></td>
+                            <td><?php echo $communion['lieu_communion'];?></td>
                             <?php if(has_permission('Communion.Edit') || has_permission('Communion.Delete')) : ?>    
                             <td>
                                 <?php if(has_permission('Communion.Edit')) : ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editCommunion/'.$communion['id_communion']);?>">
+                                <a class="btn btn-info edit" href="<?php echo site_url('sacrement/editCommunion/'.$communion['id_communion']);?>">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <?php endif; ?>
