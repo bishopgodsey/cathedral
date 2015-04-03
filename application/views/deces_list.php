@@ -58,13 +58,13 @@
                             <?php if(has_permission('Deces.Edit') || has_permission('Deces.Delete')) : ?>    
                             <td>
                                 <?php if(has_permission('Deces.Edit')) : ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editDeces/'.$dec['id_deces']);?>">
+                                <a class="btn btn-info edit" href="<?php echo site_url('sacrement/editDeces/'.$dec['id_deces']);?>">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <?php endif; ?>
                                 
                                 <?php if(has_permission('Deces.Delete')) : ?>
-                                <a class="btn btn-danger delete" href="<?php echo site_url('settings/deleteDeces/'.$dec['id_deces']);?>">
+                                <a class="btn btn-danger delete" href="<?php echo site_url('sacrement/deleteDeces/'.$dec['id_deces']);?>">
                                     <i class="fa fa-trash-o"></i> Delete
                                 </a>
                                 <?php endif; ?>
