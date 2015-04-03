@@ -49,17 +49,18 @@
                     <?php foreach($baptemes as $bapteme) : ?>
                         <tr>
                             <td><?php echo form_checkbox('select_all','select_all[]'); ?></td>
-                            <td><?php echo $bapteme->num_carte_bapt; ?></td>
+                            <td><?php echo $bapteme['num_carte_bapt']; ?></td>
                             <td><?php echo image($bapteme->photo,'Photo','width=36 height=36');?></td>
-                            <td><?php echo $bapteme->nom_bapt; ?></td>
-                            <td><?php echo $bapteme->prenom_bapt; ?></td>
-                            <td><?php echo $bapteme->date_bapt; ?></td>
-                            <td><?php echo $bapteme->parent_bapt_id; ?></td>
-                            <td><?php echo $bapteme->id_paroisse; ?></td>
+                            <td><?php echo $bapteme['nom_bapt']; ?></td>
+                            <td><?php echo $bapteme['prenom_bapt']; ?></td>
+                            <td><?php echo $bapteme['date_bapt']; ?></td>
+                            <td><?php echo $bapteme['parent_bapt_id']; ?></td>
+                            <td><?php echo $bapteme['nom_institution']; ?></td>
+                            <td><?php echo $bapteme['lieu_bapteme']; ?></td>
                             <?php if(has_permission('Bapteme.Edit') || has_permission('Bapteme.Delete')) : ?>    
                             <td>
                                 <?php if(has_permission('Bapteme.Edit')) : ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editPermission/'.$bapteme->id_bapt);?>">
+                                <a class="btn btn-info edit" href="<?php echo site_url('sacrement/editBapteme/'.$bapteme['id_bapt']);?>">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <?php endif; ?>
