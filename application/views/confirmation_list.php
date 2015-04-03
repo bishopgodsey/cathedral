@@ -54,13 +54,14 @@
                             <td><?php echo $confirmation['nom_bapt']; ?></td>
                             <td><?php echo $confirmation['prenom_bapt']; ?></td>
                             <td><?php echo $confirmation['date_confirmation']; ?></td>
-                            <td><?php echo $confirmation['parroisse_confirmation'] ?></td>
-                            <td><?php echo $confirmation['parroisse_communion'] ?></td>
-                            <td><?php echo $confirmation['parroisse_bapteme'] ?></td>
+                            <td><?php echo $confirmation['parroisse_confirmation']; ?></td>
+                            <td><?php echo $confirmation['parroisse_communion']; ?></td>
+                            <td><?php echo $confirmation['parroisse_bapteme']; ?></td>
+                            <td><?php echo $confirmation['lieu_confirmation'];?><td>
                             <?php if(has_permission('Confirmation.Edit') || has_permission('Confirmation.Delete')) : ?>    
                             <td>
                                 <?php if(has_permission('Confirmation.Edit')) : ?>
-                                <a class="btn btn-info edit" href="<?php echo site_url('settings/editConfirmation/'.$confirmation['id_confirmation']);?>">
+                                <a class="btn btn-info edit" href="<?php echo site_url('sacrement/editConfirmation/'.$confirmation['id_confirmation']);?>">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <?php endif; ?>
