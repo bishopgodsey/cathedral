@@ -4,6 +4,13 @@ class Sacrement extends CI_Controller {
     public function __construct() {
     
         parent::__construct();
+		$this->load->model('bapteme_model');
+		$this->load->model('communion_model');
+		$this->load->model('confirmation_model');
+		$this->load->model('deces_model');
+		$this->load->model('institution_model');
+		$this->load->model('marriage_model');
+		$this->load->model('personne_model');
         $this->auth->restrict();
         $this->load->library('layout');
         $this->load->helper('form');
@@ -63,7 +70,7 @@ class Sacrement extends CI_Controller {
 
         $baptemes = $this->bapteme_model->get_all();
 
-        $bapteme_columns = array('Num. Carte','Photo','Nom','Prenom','Date Bapteme', 'Parent spirituelle','Institution');
+        $bapteme_columns = array('Num. Carte','Photo','Nom','Prenom','Date Bapteme', 'Parent spirituelle','Paroisse de baptême', 'Lieu de baptême');
 
         if(has_permission('Bapteme.Edit') || has_permission('Bapteme.Delete')) {
             $bapteme_columns[] = 'Actions';  
@@ -71,7 +78,13 @@ class Sacrement extends CI_Controller {
 
         $data['baptemes'] = $baptemes;
         $data['bapteme_columns'] = $bapteme_columns;
-                
+
+		for($i=0; $i<count($baptemes); $i++){
+				$lieu_bapteme=$this->institution_model->find($baptemes[$i]['id_lieu_bapteme']); 
+				$data['baptemes'][$i]['lieu_bapteme']=$lieu_bapteme->nom_institution;
+
+		}
+
         $this->layout->view('bapteme_list',$data);
     }
 
@@ -182,6 +195,20 @@ class Sacrement extends CI_Controller {
         echo json_encode($result);
     }
 
+	function suggestCommunion($filters){
+		 $params = !empty($filters)?$filters:$this->input->get(NULL,TRUE);
+		 $this->load->model('communion_model');
+
+		 $row_result=$this->communion_model->search($params['key']);
+
+		 $result=array();
+		 foreach ($row_result as $row) {
+			 $name = $row->num_carte_bapt.'-'.$row->nom_bapt.'-'.$row->prenom_bapt;
+             array_push($result, array('id'=>$row->id_bapt,'name'=>$name));
+		 }
+		    echo json_encode($result);
+	}
+
     function suggestConfirmation($filters='') {
 
         $params = !empty($filters)?$filters:$this->input->get(NULL,TRUE);
@@ -236,12 +263,12 @@ class Sacrement extends CI_Controller {
         $this->load->model('bapteme_model');
         $message = array();
         if( $this->bapteme_model->save_bapteme($data)) {
-            $message['text'] = 'Le bapteme a bien ete enregistre';
+            $message['text'] = 'Le bapteme a été bien  enregistré';
             $message['type'] = 'error';
-
+			redirect('sacrement/bapteme');
         }else {
             
-            $message['text'] = 'Le bapteme a bien ete enregistre';
+            $message['text'] = 'Le bapteme n\'a pas été enregistré';
             $message['type'] = 'error';
         }
 
@@ -284,12 +311,12 @@ class Sacrement extends CI_Controller {
     public function saveCommunion($is_ajax=false) {
     
         $data = $this->input->post();
-        
+
         if(!$is_ajax) {
             $is_ajax = $data['ajax'];
         }
         unset($data['search']);
-        unset($data['lieu_conf']);
+        unset($data['lieu_comm']);
 
         //TODO make same validations here
         $this->load->model('communion_model');
@@ -330,7 +357,7 @@ class Sacrement extends CI_Controller {
         $communions = $this->communion_model->get_communions();
 
         $communions_columns = array('Photo','Num. Carte','Nom','Prenom','Date Communion',
-            'Parroisse Communion','Parroisse Bapteme');
+            'Parroisse Communion','Parroisse Bapteme', 'Lieu de Communion');
 
         if(has_permission('Communion.Edit') || has_permission('Communion.Delete')) {
             $communions_columns[] = 'Actions';  
@@ -361,7 +388,7 @@ class Sacrement extends CI_Controller {
         $confirmations = $this->confirmation_model->get_confirmations();
 
         $confirmation_columns = array('Photo','Num. Carte','Nom','Prenom','Date Confirmation',
-            'Parroisse Confirmation','Parroisse Communion','Parroisse Bapteme');
+            'Parroisse Confirmation','Parroisse Communion','Parroisse Bapteme', 'Lieu de confirmation');
 
         if(has_permission('Confirmation.Edit') || has_permission('Confirmation.Delete')) {
             $confirmation_columns[] = 'Actions';  
@@ -374,7 +401,7 @@ class Sacrement extends CI_Controller {
     }
 
     public function createCommunion($is_ajax=false) {
-    
+
         $this->auth->restrict(array('type'=>'warning',
             'text'=>'You dont have the permission to add Communion'), 'Communion.Add');
 
@@ -394,7 +421,9 @@ class Sacrement extends CI_Controller {
 
         $data['dioceses'] = $dioceses;
 
+
         if($is_ajax) {
+
             $this->load->view('communion_form',$data);
         }else {
             // SB Admin CSS - Include with every page
@@ -410,17 +439,69 @@ class Sacrement extends CI_Controller {
             // SB Admin Scripts - Include with every page
             $this->layout->add_js('sb-admin');
             $this->layout->add_js('utils');
-            $this->layout->add_js('confirmation');
+            $this->layout->add_js('communion');
 
             $this->layout->view('communion_form',$data);
         }
     }
 
+	public function editCommunion($id_communion){
+		$data=$this->communion_model->getCommunion($id_communion);
+
+
+		$is_ajax=false;
+		$data['ajax'] = $is_ajax;
+		$data['search']=$data['numero_communion'].'-'.$data['nom_bapt'].'-'.$data['prenom_bapt'];
+
+		$this->load->model('institution_model');
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+		$data['parroisses'] = $parroisses;
+
+		$paroisse_communion=$this->institution_model->find($data['id_paroisse_communion']);
+		$data['nom_paroisse_communion']=$paroisse_communion->nom_institution;
+
+        $data['dioceses'] = $dioceses;
+		$lieu_com=$this->institution_model->find($data['id_lieu_communion']);
+		$data['lieu_comm']=$lieu_com->nom_institution;
+
+
+		if($is_ajax) {
+			$this->layout->add_js('communion');
+            $this->load->view('communion_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('communion');
+
+            $this->layout->view('communion_form',$data);
+        }
+	}
+
     public function createConfirmation($is_ajax=false) {
         
         $this->auth->restrict(array('type'=>'warning',
             'text'=>'You dont have the permission to add Confirmation'), 'Confirmation.Add');
-
+		$data['confirmation']['num_carte_bapt']="";	$data['confirmation']['nom_bapt']="";	$data['confirmation']['prenom_bapt']="";
+		$data['confirmation']['num_confirmation']="";	$data['confirmation']['professionConfirmation']="";	$data['confirmation']['date_confirmation']="";
+		$data['confirmation']['nom_celebrant']="";	$data['confirmation']['prenom_celebrant']="";
         $data['ajax'] = $is_ajax;
 
         $this->load->model('institution_model');
@@ -459,6 +540,100 @@ class Sacrement extends CI_Controller {
         }
     }
 
+	public function editBapteme($id_Bapteme, $is_ajax=false){
+		$data['bapteme']=$this->bapteme_model->details($id_Bapteme);
+
+		 $this->auth->restrict(array('type'=>'warning',
+            'text'=>'You dont have the permission to create Bapteme'), 'Bapteme.Add');
+
+        $data['ajax'] = $is_ajax;
+        $this->load->model('institution_model');
+
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+
+		$lieu_ministere=$this->institution_model->find($data['bapteme']->id_lieu_ministere);
+		$data['bapteme']->id_lieu_ministere=$lieu_ministere->nom_institution;
+
+       if($is_ajax) {
+            $this->load->view('bapteme_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+            $this->layout->add_css('chosen.min');
+
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('jquery.bootstrap.wizard.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('bapteme');
+            $this->layout->view('bapteme_form',$data);
+        }
+	}
+
+
+	public function editConfirmation($id_confirmation){
+		$data['confirmation']=$this->confirmation_model->getConfirmation($id_confirmation);
+
+		$is_ajax=false;
+		$data['ajax'] =$is_ajax;
+
+		$this->load->model('institution_model');
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+
+		$lieu_conf=$this->institution_model->find($data['confirmation']['id_lieu_conf']);
+		$data['confirmation']['lieu_conf']=$lieu_conf->nom_institution;
+
+	 if($is_ajax) {
+            $this->load->view('confirmation_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('confirmation');
+
+            $this->layout->view('confirmation_form',$data);
+        }
+	}
+
     public function marriage() {
     
         // Restrict access to users with Confirmation.View (View Permission ) permission
@@ -492,7 +667,14 @@ class Sacrement extends CI_Controller {
         
         $this->auth->restrict(array('type'=>'warning',
             'text'=>'You dont have the permission to add marriages'), 'Marriage.Add');
+		$data['husband']="";	$data['conjoint_id']=""; $data['husband_name']=""; $data['husband_surname']="";
+		$data['husband_date_naissance']=""; $data['husband_email']="";$data['husband_tel']="";$data['husband_domicile_bapt']="";
+		$data['nom_celebrant']=""; $data['prenom_celebrant']="";
 
+		$data['wife']=""; $data['wife_name']=""; $data['wife_surname']=""; $data['wife_date_naissance']=""; $data['wife_email']="";
+		$data['wife_tel']=""; $data['wife_email']=""; $data['wife_domicile_bapt']="";
+
+		$data['marriage_id']="";
         $data['ajax'] = $is_ajax;
         $this->load->model('institution_model');
 
@@ -510,7 +692,7 @@ class Sacrement extends CI_Controller {
         $data['dioceses'] = $dioceses;
 
         if($is_ajax) {
-            $this->load->view('bapteme_form',$data);
+            $this->load->view('marriage_form',$data);
         }else {
             // SB Admin CSS - Include with every page
             $this->layout->add_css('sb-admin');
@@ -532,11 +714,12 @@ class Sacrement extends CI_Controller {
         }
     }
 
+
     public function saveMarriage($is_ajax=false) {
 
         $this->load->model(array('personne_model','marriage_model'));
         $data = $this->input->post();
-        
+
         $is_mari_catholic = $data['type_personne']==='chretien';   
         $is_epouse_catholic = $data['type_personne5']==='chretien';   
         $is_parrain_catholic = $data['type_personne2']==='chretien';   
@@ -551,6 +734,7 @@ class Sacrement extends CI_Controller {
         $marriage['diocese_id'] = $data['id_diocese'];
         $marriage['parroisse_id'] = $data['id_paroisse'];
         $marriage['lieu_celebration_id'] = $data['lieu_celebration_id'];
+		$marriage['service']=$data['service'];
 
         if($is_mari_catholic) {
            $marriage['conjoint_id'] = $data['conjoint_id'];      
@@ -633,9 +817,130 @@ class Sacrement extends CI_Controller {
             
             $this->session->set_flashdata('action_message',$message);
 
-            redirect('sacrement/communions');
+            redirect('sacrement/marriage');
         }
     }
+
+	public function editMarriage($id_mariage){
+		//$this->load->model(array('personne_model','marriage_model'));
+		$this->load->model('marriage_model');
+		//echo "mariage:".$id_mariage."<br/>";
+		$data=$this->marriage_model->details($id_mariage);
+		//echo "<pre>"; print_r($data); //exit;
+			$is_ajax=false;
+			$data['ajax'] =$is_ajax;
+
+
+		//Si le mari est catholique
+		if($data['conjoint_id']!=''){
+			$husband = $this->confirmation_model->getConfirmation($data['conjoint_id']);
+			$data['husband']=$husband['num_carte_bapt'].'-'.$husband['nom_bapt'].'-'.$husband['prenom_bapt'];
+			$data['husband_name']=$husband['nom_bapt']; $data['husband_surname']=$husband['prenom_bapt']; 
+			$data['husband_date_naissance']=$husband['date_naissance']; $data['husband_email']=$husband['email'];
+			$data['husband_tel']=$husband['tel_fixe'].'/'.$husband['tel_mob'];
+			$data['husband_domicile_bapt']=$husband['domicile_bapt'];
+			//echo "<pre>"; print_r($husband);
+		}else{
+			 $husband = $this->personne_model->find($data['no_catholique_conjoint_id']); 
+             $data['husband']=$husband->nom.' '.$husband->prenom;
+			$data['husband_name']=$husband->nom; $data['husband_surname']=$husband->prenom;
+			$data['husband_date_naissance']=$husband->date_naissance; $data['husband_email']=$husband->email;
+			$data['husband_tel']=$husband->tel;
+			$data['husband_domicile_bapt']=$husband->adresse;
+		}
+
+		//Si la femme est catholique
+		if($data['conjointe_id']!=''){
+			$wife = $this->confirmation_model->getConfirmation($data['conjointe_id']); //echo "<pre>"; print_r($wife); exit;
+			$data['wife']=$wife['num_carte_bapt'].'-'.$wife['nom_bapt'].'-'.$wife['prenom_bapt'];
+			$data['wife_name']=$wife['nom_bapt']; $data['wife_surname']=$wife['prenom_bapt']; 
+			$data['wife_date_naissance']=$wife['date_naissance']; $data['wife_email']=$wife['email'];
+			$data['wife_tel']=$wife['tel_fixe'].'/'.$wife['tel_mob'];
+			$data['wife_domicile_bapt']=$wife['domicile_bapt'];
+		}else{
+			$wife = $this->personne_model->find($data['no_catholique_conjointe_id']);   
+            $data['wife']=$wife->nom.' '.$wife->prenom;
+			$data['wife_name']=$wife->nom; $data['wife_surname']=$wife->prenom;
+			$data['wife_date_naissance']=$wife->date_naissance; $data['wife_email']=$wife->email;
+			$data['wife_tel']=$wife->tel;
+			$data['wife_domicile_bapt']=$wife->adresse;
+		}
+
+		//Si le parrain est catholique
+		if($data['parrain_id']!=''){
+			$godfather=$this->confirmation_model->getConfirmation($data['parrain_id']);
+			$data['godfather']=$godfather['num_carte_bapt'].'-'.$godfather['nom_bapt'].'-'.$godfather['prenom_bapt'];
+			$data['godfather_name']=$godfather['nom_bapt']; $data['godfather_surname']=$godfather['prenom_bapt']; 
+			$data['godfather_date_naissance']=$godfather['date_naissance']; $data['godfather_email']=$godfather['email'];
+			$data['godfather_tel']=$godfather['tel_fixe'].'/'.$godfather['tel_mob'];
+			$data['godfather_domicile_bapt']=$godfather['domicile_bapt'];
+		}else{
+			$godfather=$this->personne_model->find($data['no_catholique_parrain_id']);
+			$data['godfather']=$godfather->nom.' '.$godfather->prenom;
+			$data['godfather_name']=$godfather->nom; $data['godfather_surname']=$godfather->nom; 
+			$data['godfather_date_naissance']=$godfather->date_naissance; $data['godfather_email']=$godfather->email;
+			$data['godfather_tel']=$godfather->tel;
+			$data['godfather_domicile_bapt']=$godfather->adresse;
+		}
+
+		//Si la marraine est catholique
+		if($data['marraine_id']!=''){
+			$godmother=$this->confirmation_model->getConfirmation($data['marraine_id']);
+			$data['godmother']=$godmother['num_carte_bapt'].'-'.$godmother['nom_bapt'].'-'.$godmother['prenom_bapt'];
+			$data['godmother_name']=$godmother['nom_bapt']; $data['godmother_surname']=$godmother['prenom_bapt']; 
+			$data['godmother_date_naissance']=$godmother['date_naissance']; $data['godmother_email']=$godmother['email'];
+			$data['godmother_tel']=$godmother['tel_fixe'].'/'.$godmother['tel_mob'];
+			$data['godmother_domicile_bapt']=$godmother['domicile_bapt'];
+		}else{
+			$godmother=$this->personne_model->find($data['no_catholique_marraine_id']);
+			$data['godmother']=$godmother->nom.' '.$godmother->prenom;
+			$data['godmother_name']=$godmother->nom; $data['godmother_surname']=$godmother->prenom; 
+			$data['godmother_date_naissance']=$godmother->date_naissance; $data['godmother_email']=$godmother->email;
+			$data['godmother_tel']=$godmother->tel;
+			$data['godmother_domicile_bapt']=$godmother->adresse;
+		}
+
+		$lieu_celebration=$this->institution_model->find($data['lieu_celebration_id']); //echo "<pre>"; print_r($lieu_celebration);
+		$data['lieu_marriage']=$lieu_celebration->nom_institution;
+		$lieu_ministere_celebrant=$this->institution_model->find($data['id_lieu_ministere']);
+		$data['lieu_ministere']= $lieu_ministere_celebrant->nom_institution;
+
+
+			$dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+			 if($is_ajax) {
+            $this->load->view('marriage_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+            $this->layout->add_css('chosen.min');
+
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('jquery.bootstrap.wizard.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('marriage');
+            $this->layout->view('marriage_form',$data);
+        }
+
+	}
 
     public function deces() {
     
@@ -837,4 +1142,47 @@ class Sacrement extends CI_Controller {
        return FALSE; 
     }
 
-} 
+	function editDeces($id_Deces){
+		$data['deces']=$this->deces_model->getDeces($id_Deces);
+
+		$is_ajax=false;
+		$data['ajax'] =$is_ajax;
+
+		 $this->load->model('institution_model');
+        $dioceses = $this->institution_model->get_by_type(1);
+
+        $parroisses = array();
+
+        foreach($dioceses as $diocese) {
+
+            $parroisses[$diocese->id_institution] = $this->institution_model->get_all(array('parent_id'=>$diocese->id_institution)); 
+        }
+
+        $data['parroisses'] = $parroisses;
+
+        $data['dioceses'] = $dioceses;
+
+	  if($is_ajax) {
+            $this->load->view('deces_form',$data);
+        }else {
+            // SB Admin CSS - Include with every page
+            $this->layout->add_css('sb-admin');
+            $this->layout->add_css('bootstrap-datetimepicker.min');
+            $this->layout->add_css('bootstrapValidator.min');
+
+            $this->layout->add_js('moment.min');
+            $this->layout->add_js('bootstrap-datetimepicker.min');
+            $this->layout->add_js('bootstrapValidator.min');
+            $this->layout->add_js('bootstrap-typeahead');
+            $this->layout->add_js('chosen.jquery.min');
+            // SB Admin Scripts - Include with every page
+            $this->layout->add_js('sb-admin');
+            $this->layout->add_js('utils');
+            $this->layout->add_js('deces');
+
+            $this->layout->view('deces_form',$data);
+        }
+	}
+
+
+}

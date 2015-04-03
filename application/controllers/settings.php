@@ -241,7 +241,7 @@ class Settings extends CI_Controller {
 		$data['user'] = $selected_user;
 		
 		$data['ajax'] = $is_ajax;
-		
+
 		if($is_ajax) {
 			$this->load->view('user_form',$data);
 		}else {
