@@ -14,7 +14,9 @@
 <div class="row">
 <?php endif; ?>
         
-<?php if($this->session->flashdata('notification_message')) : 
+<?php
+
+if($this->session->flashdata('notification_message')) :
         $message = $this->session->flashdata('notification_message');?>
     <div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
         <button type="button" class="close" data-dimiss="alert" aria-hidden="true">&times;</button>
@@ -37,6 +39,7 @@
         data-bv-feedbackicons-valid="fa fa-check"
         data-bv-feedbackicons-invalid="fa fa-times"
         data-bv-feedbackicons-validating="fa fa-spinner">
+
         <div class="progress progress-striped active" style="margin-top:10px">
             <div class="progress-bar" role="progressbar" style="width: 0%">
             </div>
@@ -54,8 +57,9 @@
                             </select>
                         </div>
                         <div class="form-group">
+                        	<input type="hidden" name="id_bapt" value='<?php echo $bapteme->id_bapt; ?>'/>
                             <label for="nom">Nom <span>*</span></label>
-                            <input type="text" name="nom_bapt" class="form-control" id="nom" placeholder="Saissez le nom" 
+                            <input type="text" name="nom_bapt" class="form-control" id="nom" placeholder="Saissez le nom"  value='<?php echo $bapteme->nom_bapt; ?>'
                             data-bv-notempty data-bv-notempty-message="Le nom ne peut pas etre vide"
                             data-bv-message="Le nom est invalide"
                             data-bv-regexp="true"
@@ -67,7 +71,7 @@
                             <label for="numcarte">Sexe <span>*</span></label>
                             <div class="form-control">   
                                 <label for="masculin" style="font-weight:normal;">
-                                    <input type="radio" checked id="masculin" name="sexe_bapt" value="Masculin" 
+                                    <input type="radio" checked id="masculin" name="sexe_bapt" value="Masculin"  
                                     data-bv-notempty data-bv-notempty-message="Vous devez selectionner le genre"/>
                                 Masculin
                                 </label>
@@ -80,19 +84,19 @@
 
                         <div class="form-group">
                             <label for="domicile">Domicile <span>*</span></label>
-                            <input type="text" name="domicile_bapt" class="form-control" id="domicile" placeholder="Ou habite vous? "
+                            <input type="text" name="domicile_bapt" class="form-control" id="domicile" placeholder="Ou habitez- vous? " value='<?php echo $bapteme->domicile_bapt; ?>'
                             data-bv-notempty data-bv-notempty-message="Veuillez indiquer le domicile">
                         </div>
 
                         <div class="form-group">
                             <label for="tel_fixe">Tel Fixe</label>
-                            <input type="tel" name="tel_fixe" class="form-control" id="tel_fixe" placeholder="Numero de telephone fixe">
+                            <input type="tel" name="tel_fixe" class="form-control" id="tel_fixe" value="<?php echo $bapteme->tel_fixe; ?>" placeholder="Numero de telephone fixe">
                         </div>
 
                         <div class="form-group">
                             <label for="date_naissance">Date Naissance <span>*</span></label>
                             <div class="input-group date" data-date-format="YYYY-MM-DD">
-                            <input autocomplete="off" type="text" class="form-control" name="date_naissance" id="date_naissance" 
+                            <input autocomplete="off" type="text" class="form-control" name="date_naissance" id="date_naissance"  value='<?php echo $bapteme->date_naissance; ?>'
                             data-bv-notempty data-bv-notempty-message="La date de naissance est requis"
                             data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" />
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -103,13 +107,13 @@
                         <div class="form-group">
                             <label for="numcarte">Numero carte <span>*</span></label>
                             <input type="text" name="num_carte_bapt" id="numcarte" class="form-control" 
-                                id="numcarte" placeholder="numero de la carte" 
+                                id="numcarte" placeholder="numero de la carte"  value='<?php echo $bapteme->num_carte_bapt; ?>'
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="Le numero de la carte ne peut pas etre vide" >
                         </div>
                         <div class="form-group">
                             <label for="prenom">Prenom <span>*</span></label>
-                            <input type="text" name="prenom_bapt" class="form-control" id="prenom" placeholder="Saisissez le prenom"
+                            <input type="text" name="prenom_bapt" class="form-control" id="prenom" placeholder="Saisissez le prenom" value='<?php echo $bapteme->prenom_bapt; ?>'
                             data-bv-notempty data-bv-notempty-message="Le nom ne peut pas etre vide"
                             data-bv-message="Le nom est invalide"
                             data-bv-regexp="true"
@@ -119,18 +123,18 @@
 
                         <div class="form-group">
                             <label for="professionf">Profession</label>
-                            <input type="text" name="professionBapt" class="form-control" id="prefession" placeholder="Saisissez la profession">
+                            <input type="text" name="professionBapt" class="form-control" id="prefession" value="<?php echo $bapteme->professionBapt;?>" placeholder="Saisissez la profession"> 
                         </div>
                         
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Saisissez l'email"
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Saisissez l'email" value="<?php echo $bapteme->email;?>"
                             data-bv-emailaddress-message="Cette email n'est pas valide">
                         </div>
 
                         <div class="form-group">
                             <label for="tel_mob">Tel Mobile</label>
-                            <input type="tel" name="tel_mob" class="form-control" id="tel_mob" placeholder="Numero de telephone mobile">
+                            <input type="tel" name="tel_mob" class="form-control" id="tel_mob" value="<?php echo $bapteme->tel_mob;?>" placeholder="Numero de telephone mobile">
                         </div>
                     </div>
                </div> 
@@ -140,15 +144,15 @@
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="nom_pere">Nom du pere</label>
-                            <input type="text" name="nom_pere" class="form-control" id="nom_pere" placeholder="Tapez quelques lettres" >
-                            <input type="hidden" name="pere_id" id="pere_id">
+                            <input type="text" name="nom_pere" class="form-control" id="nom_pere" placeholder="Tapez quelques lettres"  value="<?php echo $bapteme->nom_pere;?>" />
+                            <input type="hidden" name="pere_id" id="pere_id" >
                         </div>
                     </div>
                     
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="prenom_pere">Prenom du pere</label>
-                            <input type="text" name="prenom_pere" class="form-control" id="prenom_pere" placeholder="Tapez quelques lettres">
+                            <input type="text" name="prenom_pere" class="form-control" id="prenom_pere" placeholder="Tapez quelques lettres" value="<?php echo $bapteme->prenom_pere;?>" />
                         </div>
                     </div>
                     <div class="col-sm-12 col-lg-12 col-md-12">
@@ -158,7 +162,7 @@
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="nom_mere">Nom de la mere</label>
-                            <input type="text" name="nom_mere" class="form-control" id="nom_mere" placeholder="Tapez quelques lettres">
+                            <input type="text" name="nom_mere" class="form-control" id="nom_mere" placeholder="Tapez quelques lettres" value="<?php echo $bapteme->nom_mere;?>" />
                             <input type="hidden" name="mere_id" id="mere_id">
                         </div>
                     </div>
@@ -166,7 +170,7 @@
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="prenom_mere">Prenom de la mere</label>
-                            <input type="text" name="prenom_mere" class="form-control" id="prenom_mere" placeholder="Tapez quelques lettres">
+                            <input type="text" name="prenom_mere" class="form-control" id="prenom_mere" placeholder="Tapez quelques lettres" value="<?php echo $bapteme->prenom_mere;?>">
                         </div>
                     </div>
                     <div class="col-sm-12 col-lg-12 col-md-12">
@@ -176,7 +180,7 @@
                         <div class="form-group">
                             <label for="dateMariageParent">Date Marriage</label>
                             <div class="input-group date" data-date-format="YYYY-MM-DD">
-                            <input autocomplete="off" type="text" class="form-control" name="dateMariageParent" id="dateMariageParent"
+                            <input autocomplete="off" type="text" class="form-control" name="dateMariageParent" id="dateMariageParent" value="<?php echo $bapteme->dateMariageParent; ?>"
                             data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" />
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                             </div> 
@@ -188,7 +192,7 @@
 					<div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="nom_pere">Nom du parain / Maraine <span>*</span></label>
-                            <input type="text" name="nom_parain" class="form-control" id="nom_parain" placeholder="Tapez quelques lettres"
+                            <input type="text" name="nom_parain" class="form-control" id="nom_parain" placeholder="Tapez quelques lettres" value="<?php echo $bapteme->nom_parrain;?>"
                             data-bv-notempty data-bv-notempty-message="Le nom du parrain ne peut pas etre vide"
                             data-bv-message="Le nom du parain est invalide"
                             data-bv-regexp="true"
@@ -201,7 +205,7 @@
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="prenom_pere">Prenom du parrain / Maraine <span>*</span></label>
-                            <input type="text" name="prenom_parain" class="form-control" id="prenom_parain" placeholder="Tapez quelques lettres"
+                            <input type="text" name="prenom_parain" class="form-control" id="prenom_parain" placeholder="Tapez quelques lettres" value="<?php echo $bapteme->prenom_parrain;?>"
 
                             data-bv-notempty data-bv-notempty-message="Le prenom du parrain ne peut pas etre vide"
                             data-bv-message="Le prenom du parrain est invalide"
@@ -242,7 +246,7 @@
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="lieu_bapt">Lieu Bapteme <span>*</span></label>
-                            <input type="text" name="lieu_bapt" class="form-control" id="lieu_bapt" placeholder="Tapez quelques lettres pour selectionner" 
+                            <input type="text" name="lieu_bapt" class="form-control" id="lieu_bapt" placeholder="Tapez quelques lettres pour selectionner" value="<?php echo $bapteme->lieu_bapteme;?>"
                         data-bv-notempty data-bv-notempty-message="Le lieu de bapteme ne peut pas etre vide">
 							<input type="hidden" id="id_lieu_bapteme" name="id_lieu_bapteme"/>
 							
@@ -252,7 +256,7 @@
 						<div class="form-group">
                             <label for="date_bapt">Date bapteme <span>*</span></label>
                             <div class="input-group date" data-date-format="YYYY-MM-DD">
-                            <input autocomplete="off" type="text" class="form-control" name="date_bapt" id="date_bapt"                     
+                            <input autocomplete="off" type="text" class="form-control" name="date_bapt" id="date_bapt" value="<?php echo $bapteme->date_bapt; ?>"                     
                                 data-bv-notempty data-bv-notempty-message="La date de bapteme est requis"
                                 data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" />
                                 <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -268,7 +272,7 @@
                     <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group">
                             <label for="nom_celebrant">Nom celebrant <span>*</span></label>
-                            <input type="text" name="nom_celebrant" class="form-control" id="nom_celebrant" placeholder="Tapez le nom du celebrant" 
+                            <input type="text" name="nom_celebrant" class="form-control" id="nom_celebrant" placeholder="Tapez le nom du celebrant" value="<?php echo $bapteme->nom_celebrant;?>"
 
                             data-bv-notempty data-bv-notempty-message="Le nom du celebrant ne peut pas etre vide"
                             data-bv-message="Le nom du celebrant est invalide"
@@ -279,13 +283,13 @@
                         
                         <div class="form-group">
                             <label for="lieu_ministere">Lieu du Ministere</label>
-                            <input type="text" name="lieu_ministere" class="form-control" id="lieu_ministere">
-                            <input type="hidden" id="id_lieu_ministere" name="id_lieu_ministere"/>
+                            <input type="text" name="lieu_ministere" class="form-control" id="lieu_ministere" value="<?php echo $bapteme->id_lieu_ministere; ?>" />
+                            <input type="hidden" id="id_lieu_ministere" name="id_lieu_ministere" value="<?php echo $bapteme->id_lieu_ministere; ?>/>
                         </div>
 
                         <div class="form-group">
                             <label for="tel_cel_1">Contact</label>
-                            <input type="text" name="contact" class="form-control" id="tel_cel_1" placeholder="Numero de telephone">
+                            <input type="text" name="contact" class="form-control" id="tel_cel_1" placeholder="Numero de telephone" value="<?php echo $bapteme->contact;?>" />
                         </div>
                     </div>
     
@@ -293,7 +297,8 @@
 
                         <div class="form-group">
                             <label for="prenom_celebrant">Prenom celebrant <span>*</span></label>
-                            <input type="text" name="prenom_celebrant" class="form-control" id="prenom_celebrant" placeholder="Tapez le prenom du celebrant"
+                            <input type="text" name="prenom_celebrant" class="form-control" id="prenom_celebrant" placeholder="Tapez le prenom du celebrant" 
+                            value="<?php echo $bapteme->prenom_celebrant;?>"
 
                             data-bv-notempty data-bv-notempty-message="Le prenom du celebrant ne peut pas etre vide"
                             data-bv-message="Le prenom du parain est invalide"
@@ -304,7 +309,7 @@
 
                         <div class="form-group">
                             <label for="service">Service</label>
-                            <input type="text" name="service" class="form-control" id="service">
+                            <input type="text" name="service" class="form-control" id="service" value="<?php echo $bapteme->service;?>" />
                         </div>
                         
                     </div>
