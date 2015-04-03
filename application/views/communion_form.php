@@ -1,3 +1,4 @@
+
 <?php if(!$ajax) : ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -16,7 +17,7 @@
 <?php if(!$ajax) : ?>
 <div class="panel panel-default">
 	<div class="panel-heading">		
-		<i class="fa fa-bar-chart-o fa-fw"></i> Nouveau Communion	
+		<i class="fa fa-bar-chart-o fa-fw"></i> <?php echo isset($id_communion)?'Modifier la Communion':'Nouveau Communion'?>	
 	</div>
 	<div class="panel-body">		
 <?php endif; ?>
@@ -50,10 +51,13 @@ data-bv-feedbackicons-validating="fa fa-spinner">
         <div class="col-sm-2 col-md-8 col-lg-8">
             <div class="input-group"> 
             <span class="input-group-addon"><span class="fa fa-search fa-lg"></span></span>
-            <input type="text" autocomplete="off" name="search" class="form-control input-lg" id="search" placeholder="Chercher par Numero carte de Bapteme, Nom ou Prenom" data-bv-notempty data-bv-notempty-message="Veuillez selectionner un chretien"/>
+            <input type="text" autocomplete="off	" name="search" class="form-control input-lg" id="search" value="<?php echo $num_carte_bapt."-".$nom_bapt."-".$prenom_bapt;?>" placeholder="Chercher par Numero carte de Bapteme, Nom ou Prenom" data-bv-notempty data-bv-notempty-message="Veuillez selectionner un chretien" />
             </div>
         </div>
-            <input type="hidden" name="id_bapt" id="id_communion"/>
+            <input type="hidden" name="id_bapt" id="id_bapt" value="<?php echo $id_bapt;?>"/>
+			<?php //if(isset($id_communion)):?>
+			<!--<input type="text" name="id_communion_modif" />-->
+			<?php //endif;?>
         </div>
     </div>
     <div class="col-sm-12 col-lg-12 col-md-12">
@@ -62,16 +66,17 @@ data-bv-feedbackicons-validating="fa fa-spinner">
     <div class="row">
         <div class="col-sm-6 col-md-6 col-lg-6">         
             <div class="form-group">
+            	<input type="hidden" name="id_communion" value='<?php echo $id_communion; ?>'/>
                 <label for="num_confirmation">Numero Communion <span>*</span></label>
                 <input type="text" name="numero_communion" class="form-control" id="num_confirmation" placeholder="Numero de Confirmation"
-                data-bv-notempty data-bv-notempty-message="Indiquer le numero de communion SVP!">
+                data-bv-notempty data-bv-notempty-message="Indiquer le numero de communion SVP!" value="<?php echo $numero_communion;?>"/>
             </div>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="form-group">
                 <label for="profession">Profession </label>
                 <input type="text" name="profession_communion" id="profession" class="form-control" 
-                    id="profession" placeholder="Profession du chretien">
+                    id="profession" placeholder="Profession du chretien" value="<?php echo $profession_communion;?>">
             </div>
         </div>
          
@@ -96,28 +101,30 @@ data-bv-feedbackicons-validating="fa fa-spinner">
                 <label for="id_paroisse">Parroisse<span>*</span></label>
                 <select id="id_paroisse" name="id_paroisse_communion" class="form-control" 
                     data-bv-notempty data-bv-notempty-message="Vous devez selectionner une parroisse">
+                   
                 </select>
+                
             </div>
         </div>
         
         <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="form-group">
-                <label for="lieu_bapt">Lieu Confirmation <span>*</span></label>
-                <input type="text" autocomplete="off" name="lieu_conf" class="form-control" id="lieu_conf" placeholder="Tapez quelques lettres pour selectionner" 
-            data-bv-notempty data-bv-notempty-message="Le lieu de bapteme ne peut pas etre vide">
-                <input type="hidden" id="id_lieu_conf" name="id_lieu_confirmation"/> 
+                <label for="lieu_bapt">Lieu de Communion <span>*</span></label>
+                <input type="text" autocomplete="off" name="lieu_comm" class="form-control" id="lieu_conf" placeholder="Tapez quelques lettres pour selectionner" 
+            data-bv-notempty data-bv-notempty-message="Le lieu de bapteme ne peut pas etre vide" value="<?php echo $lieu_comm;?>">
+                <input type="hidden" id="id_lieu_conf" name="id_lieu_communion" value="<?php echo $id_lieu_communion; ?>"/> 
             </div>
         </div>
         
         <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="form-group">
                 <label for="date_bapt">Date Communion <span>*</span></label>
-                <div class="input-group date" data-date-format="YYYY-MM-DD">
+					<div class="input-group date" data-date-format="YYYY-MM-DD">
                 <input autocomplete="off" type="text" class="form-control" name="date_communion" id="date_confirmation"                     
                     data-bv-notempty data-bv-notempty-message="La date de bapteme est requis"
-                    data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" />
+                    data-bv-date-format="YYYY-MM-DD" data-bv-date-message="Format de la date Invalide. Ex : 2014-04-23" value="<?php echo $date_communion;?>"/>
                     <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                </div> 
+                </div>
             </div>
         </div>
          
@@ -129,7 +136,7 @@ data-bv-feedbackicons-validating="fa fa-spinner">
                
                 <button  class="btn btn-primary" type="submit">
                     <i class="fa fa-save"></i>
-                    <?php echo isset($confirmation)?'Update':'Save' ?>
+                    <?php echo isset($id_communion)?'Update':'Save' ?>
                 </button>
                 <button  class="btn btn-default previous" type="button"><i class="fa fa-times-circle-o"></i> Cancel</button>
             </div>
