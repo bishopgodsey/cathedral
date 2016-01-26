@@ -10,7 +10,7 @@
 	<?php foreach($css as $url): ?>
 	<link rel="stylesheet" href="<?php echo $url; ?>" />
 	<?php endforeach; ?>
-	
+
 </head>
 
 <body>
@@ -56,7 +56,7 @@
     </div>
     <!-- /#wrapper -->
 
-    
+
     <?php foreach($js as $url): ?>
 	<script src="<?php echo $url; ?>"></script>
 	<?php endforeach; ?>
