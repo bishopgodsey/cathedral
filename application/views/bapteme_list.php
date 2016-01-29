@@ -1,6 +1,6 @@
  <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Baptemes</h1>
+        <h1 class="page-header">Baptisms</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -11,10 +11,10 @@
     
     <div class="panel-heading">
         
-        <i class="fa fa-lock fa-fw"></i> Baptemes enregistres 
+        <i class="fa fa-lock fa-fw"></i> Baptism Registry
         <div class="pull-right">
             <?php if(has_permission('Bapteme.Add')) : ?>
-            <a title="Ajouter un nouveau bapteme" id="createBapteme" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createBapteme');?>"><i title="Enregistrer un nouveau bapteme" class="fa fa-plus-circle"></i> Nouveau Bapteme</a>
+            <a title="Ajouter un nouveau bapteme" id="createBapteme" class="btn btn-primary panel-header-btn" href="<?php echo site_url('sacrement/createBapteme');?>"><i title="Enregistrer un nouveau bapteme" class="fa fa-plus-circle"></i> New Baptism</a>
             <?php endif; ?>
         </div>
         

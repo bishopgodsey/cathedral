@@ -70,7 +70,8 @@ class Sacrement extends CI_Controller {
 
         $baptemes = $this->bapteme_model->get_all();
 
-        $bapteme_columns = array('Num. Carte','Photo','Nom','Prenom','Date Bapteme', 'Parent spirituelle','Paroisse de baptême', 'Lieu de baptême');
+        $bapteme_columns = array('Cert. Number','Photo','Name','Surname','Date of Baptism', 'Parent spirituelle','Parish of Baptism', '
+Place of baptism');
 
         if(has_permission('Bapteme.Edit') || has_permission('Bapteme.Delete')) {
             $bapteme_columns[] = 'Actions';  

@@ -44,46 +44,46 @@ if(!defined('BASEPATH'))
 				<!-- /input-group -->
 			</li>
 			<li>
-				<a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+				<a href="'.site_url('').'"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 			</li>
+			<!--<li>
+				<a href="tables.php"><i class="fa fa-table fa-fw"></i> Statistics</a>
+			</li>-->
 			<li>
-				<a href="tables.html"><i class="fa fa-table fa-fw"></i> Statistiques</a>
-			</li>
-			<li>
-				<a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Eglises<span class="fa arrow"></span></a>
+				<a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Churches<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li>
 						<a href="'.site_url('institution/type/1').'">Diocese</a>
 					</li>
 					<li>
-						<a href="'.site_url('institution/type/2').'">Paroisse</a>
+						<a href="'.site_url('institution/type/2').'">Parish</a>
 					</li>
 					<li>
-						<a href="'.site_url('institution/type/3').'">Chapelle</a>
+						<a href="'.site_url('institution/type/3').'">Chapel</a>
 					</li>
 					<li>
-                    <a href="'.site_url('institution/type/4').'">Sucursale</a>
+                    <a href="'.site_url('institution/type/4').'">Branch</a>
 					</li>
 				</ul>
 				<!-- /.nav-second-level -->
 			</li>
 			
-			<li>
+			<!--<li>
 				<a href="forms.html"><i class="fa fa-edit fa-fw"></i><span class="fa arrow"></span> Finances</a>
 				<ul class="nav nav-second-level">
 					<li>
 						<a href="panels-wells.html">Imperezwa</a>
 					</li>
 					<li>
-						<a href="panels-wells.html">Grand Livre</a>
+						<a href="panels-wells.html">Ledger</a>
 					</li>
 				</ul>
-			</li>
+			</li>-->
 			<li>
-				<a href="#"><i class="fa fa-wrench fa-fw"></i> Sacrements<span class="fa arrow"></span></a>
+				<a href="#"><i class="fa fa-wrench fa-fw"></i> Sacraments<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li>
-						<a href="'.site_url('sacrement/bapteme').'">Bapteme</a>
+						<a href="'.site_url('sacrement/bapteme').'">Baptism</a>
 					</li>
 					<li>
                     <a href="'.site_url('sacrement/communions').'">Communion</a>
@@ -95,7 +95,7 @@ if(!defined('BASEPATH'))
                         <a href="'.site_url('sacrement/marriage').'">Marriage</a>
 					</li>
 					<li>
-                        <a href="'.site_url('sacrement/deces').'">Deces</a>
+                        <a href="'.site_url('sacrement/deces').'">Death</a>
 					</li>
 				</ul>
 				<!-- /.nav-second-level -->
@@ -105,13 +105,13 @@ if(!defined('BASEPATH'))
 				<ul class="nav nav-second-level">
 					
 					<li>
-						<a href="#">Bapteme <span class="fa arrow"></span></a>
+						<a href="#">Baptism <span class="fa arrow"></span></a>
 						<ul class="nav nav-third-level">
 							<li>
-								<a href="#">Delegation de Bapteme</a>
+								<a href="#">Delegation of Baptism</a>
 							</li>
 							<li>
-								<a href="#">Extrait de Bapteme</a>
+								<a href="#">Taken from Baptism</a>
 							</li>
 							
 						</ul>
@@ -121,10 +121,10 @@ if(!defined('BASEPATH'))
 						<a href="#">Marriage <span class="fa arrow"></span></a>
 						<ul class="nav nav-third-level">
 							<li>
-								<a href="#">Delegation de Marriage</a>
+								<a href="#">Delegation of Marriage</a>
 							</li>
 							<li>
-								<a href="#">Certificat de Marriage</a>
+								<a href="#">Certificate of Marriage</a>
 							</li>
 							<li>
 								<a href="#">Dispense de Marriage</a>
@@ -138,12 +138,12 @@ if(!defined('BASEPATH'))
 						</ul>
 						<!-- /.nav-third-level -->
 					</li>
-					<li>
-						<a href="#">Autres documents</a>
+					<!--<li>
+						<a href="#">Other documents</a>
 					</li>
 					<li>
 						<a href="#">Second Level Item</a>
-					</li>
+					</li>-->
 				</ul>
 				<!-- /.nav-second-level -->
 			</li>

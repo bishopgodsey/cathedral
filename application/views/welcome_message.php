@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">Dashboard <?php echo $this->auth->user()->username?></h1>
+		<h1 class="page-header">Dashboard <?php echo $this->auth->user()->display_name?></h1>
 	</div>
 	<!-- /.col-lg-12 -->
 </div>
@@ -13,9 +13,9 @@
 								<button type="button" class="close" data-dimiss="alert" aria-hidden="true">&times;</button>
 								<?php echo $message['text']; ?>
 							</div>
-		<?php endif; ?>
+	<?php endif; ?>
 
-		<div class="panel panel-default">
+<!--		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
 				<div class="pull-right">
@@ -39,13 +39,13 @@
 				</div>
 			</div>
 			<!-- /.panel-heading -->
-			<div class="panel-body">
+<!--			<div class="panel-body">
 				<div id="morris-area-chart"></div>
 			</div>
 			<!-- /.panel-body -->
-		</div>
+<!--		</div>
 		<!-- /.panel -->
-		<div class="panel panel-default">
+<!--		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
 				<div class="pull-right">
@@ -69,7 +69,7 @@
 				</div>
 			</div>
 			<!-- /.panel-heading -->
-			<div class="panel-body">
+<!--			<div class="panel-body">
 				<div class="row">
 					<div class="col-lg-4">
 						<div class="table-responsive">
@@ -135,24 +135,24 @@
 							</table>
 						</div>
 						<!-- /.table-responsive -->
-					</div>
+<!--					</div>
 					<!-- /.col-lg-4 (nested) -->
-					<div class="col-lg-8">
+<!--					<div class="col-lg-8">
 						<div id="morris-bar-chart"></div>
 					</div>
 					<!-- /.col-lg-8 (nested) -->
-				</div>
+<!--				</div>
 				<!-- /.row -->
-			</div>
+<!--			</div>
 			<!-- /.panel-body -->
-		</div>
+<!--		</div>
 		<!-- /.panel -->
-		<div class="panel panel-default">
+<!--		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-clock-o fa-fw"></i> Timeline
 			</div>
 			<!-- /.panel-heading -->
-			<div class="panel-body">
+<!--			<div class="panel-body">
 				<ul class="timeline">
 					<li>
 						<div class="timeline-badge"><i class="fa fa-check"></i>
@@ -259,17 +259,17 @@
 				</ul>
 			</div>
 			<!-- /.panel-body -->
-		</div>
+<!--		</div>
 		<!-- /.panel -->
-	</div>
+<!--	</div>
 	<!-- /.col-lg-8 -->
-	<div class="col-lg-4">
+<!--	<div class="col-lg-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-bell fa-fw"></i> Notifications Panel
 			</div>
 			<!-- /.panel-heading -->
-			<div class="panel-body">
+	<!--		<div class="panel-body">
 				<div class="list-group">
 					<a href="#" class="list-group-item">
 						<i class="fa fa-comment fa-fw"></i> New Comment
@@ -318,12 +318,12 @@
 					</a>
 				</div>
 				<!-- /.list-group -->
-				<a href="#" class="btn btn-default btn-block">View All Alerts</a>
+<!--				<a href="#" class="btn btn-default btn-block">View All Alerts</a>
 			</div>
 			<!-- /.panel-body -->
-		</div>
+<!--		</div>
 		<!-- /.panel -->
-		<div class="panel panel-default">
+<!--		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
 			</div>
@@ -332,9 +332,9 @@
 				<a href="#" class="btn btn-default btn-block">View Details</a>
 			</div>
 			<!-- /.panel-body -->
-		</div>
+<!--		</div>
 		<!-- /.panel -->
-		<div class="chat-panel panel panel-default">
+<!--		<div class="chat-panel panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-comments fa-fw"></i>
 				Chat
@@ -373,7 +373,7 @@
 				</div>
 			</div>
 			<!-- /.panel-heading -->
-			<div class="panel-body">
+<!--			<div class="panel-body">
 				<ul class="chat">
 					<li class="left clearfix">
 						<span class="chat-img pull-left">
@@ -439,7 +439,7 @@
 				</ul>
 			</div>
 			<!-- /.panel-body -->
-			<div class="panel-footer">
+<!--			<div class="panel-footer">
 				<div class="input-group">
 					<input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
 					<span class="input-group-btn">
@@ -450,9 +450,9 @@
 				</div>
 			</div>
 			<!-- /.panel-footer -->
-		</div>
+<!--		</div>
 		<!-- /.panel .chat-panel -->
-	</div>
+<!--	</div>
 	<!-- /.col-lg-4 -->
 </div>
 <!-- /.row -->

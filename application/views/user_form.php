@@ -40,7 +40,19 @@
 							'id'=>'email',
 							'value'=>(isset($user)?$user->email:'')
 							));
+
+		echo form_input(array('label'=>'First Name',
+							'name'=>'nom',
+							'id'=>'nom',
+							'value'=>(isset($user)?$user->nom:'')
+							));
 							
+		echo form_input(array('label'=>'Last Name',
+							'name'=>'prenom',
+							'id'=>'prenom',
+							'value'=>(isset($user)?$user->prenom:'')
+							));
+
 		echo form_input(array('label'=>'Display Name',
 							'name'=>'display_name',
 							'id'=>'display_name',
@@ -70,7 +82,7 @@
         <?php if(!$ajax) : ?>
         <div class="row">
 		    <div class="center-inline">
-               
+
                 <button  class="btn btn-primary" type="submit">
                     <i class="fa fa-save"></i>
                     <?php echo isset($user)?'Update':'Save' ?>

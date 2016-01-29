@@ -10,4 +10,4 @@
 |
 |
 */
-$config['app_title']	= 'Open Catholique';
+$config['app_title']	= 'OCCI Sacramental Register';

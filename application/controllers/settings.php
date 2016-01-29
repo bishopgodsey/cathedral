@@ -30,7 +30,7 @@ class Settings extends CI_Controller {
 		
 		$users = $this->user_model->get_all();
 		
-		$user_columns = array('Username','Nom','Prenom','Display Name','Email','Last Login', 'Status');
+		$user_columns = array('Username','First Name','Last Name','Display Name','Email','Last Login', 'Status');
 
         if(has_permission('Users.Edit') || has_permission('Users.Delete')) {
             $user_columns[] = 'Actions';  
